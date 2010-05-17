@@ -2,6 +2,7 @@ package chatServer;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -77,5 +78,9 @@ public final class Server implements Runnable {
     public void kill(Session session) {
         Utils.log("Killed: " + session.getId());
         sessions.remove(session);
+    }
+
+    public Vector<Session> getSessions() {
+        return sessions;
     }
 }
