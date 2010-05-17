@@ -31,7 +31,7 @@ public class Session extends Thread {
             e.printStackTrace();
         }
 
-        Utils.log("Nowa sesja! ID:" + getId() + " (" + socket + ")");
+        Utils.log("Nowa sesja! ID:" + this + " (" + socket + ")");
     }
 
     public void run() {
@@ -64,7 +64,7 @@ public class Session extends Thread {
             }
 
             server.kill(this);
-            Utils.log("Połączenie zostało zakończone: " + getId());
+            Utils.log("Połączenie zostało zakończone: " + this);
         }
     }
 
@@ -86,5 +86,15 @@ public class Session extends Thread {
 
     public void setNick(String nick) {
         this.nick = nick;
+    }
+
+    /**
+     * Returns a string representation of this session
+     *
+     * @return a string representation of this session.
+     */
+    @Override
+    public String toString() {
+        return "{" + getNick() + "}";
     }
 }
