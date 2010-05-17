@@ -14,6 +14,6 @@ public class Broadcast extends Message {
 
     @Override
     public String toString() {
-        return "" + from + ": " + message;  //To change body of implemented methods use File | Settings | File Templates.
+        return getTextTimestamp() + " " + from + ": " + message;
     }
 }
