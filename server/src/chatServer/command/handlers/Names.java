@@ -3,6 +3,7 @@ package chatServer.command.handlers;
 import chatServer.Server;
 import chatServer.Session;
 import chatServer.command.BaseCommand;
+import chatServer.message.Notice;
 
 import java.util.Vector;
 
@@ -18,7 +19,7 @@ public class Names extends BaseCommand {
         for (Session s : server.getSessions()) {
             names.add(s.getNick());
         }
-        session.notify(names.toString());
+        server.send(new Notice(session, names.toString()));
     }
 
     @Override

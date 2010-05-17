@@ -72,9 +72,9 @@ public class Session extends Thread {
         out.println(message);
     }
 
-    public void notify(String message) {
+    /*public void notify(String message) {
         send(message);
-    }
+    }*/
 
     public long getId() {
         return id;

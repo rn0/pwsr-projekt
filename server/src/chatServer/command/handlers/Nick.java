@@ -4,6 +4,7 @@ import chatServer.Server;
 import chatServer.Session;
 import chatServer.Utils;
 import chatServer.command.BaseCommand;
+import chatServer.message.Notice;
 
 /**
  * User: Piotr Kapera
@@ -17,7 +18,8 @@ public class Nick extends BaseCommand {
         Utils.log("* nick command");
         if(params.length == 2) {
             if(server.checkIfNickOccupied(params[1])) {
-                session.notify("Nick already occupied");
+                //session.notify("Nick already occupied");
+                server.send(new Notice(session, "Nick already occupied"));
             } else {
                 session.setNick(params[1]);
             }

@@ -1,5 +1,9 @@
 package chatServer;
 
+import chatServer.message.Broadcast;
+import chatServer.message.Message;
+import chatServer.message.Notice;
+
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
@@ -38,23 +42,31 @@ public final class Server implements Runnable {
         this.port = port;
     }
 
-    public void broadcast(Session from, String message) {
-        message = "[ID:" + from.getNick() + "]: " + message;
+    /*private void broadcast(Session from, String message) {
+        message = "" + from + "" + message;
         Utils.log("Broadcast: " + message);
-        synchronized (sessions) {
-            for (Session session : sessions) {
-                if (!session.equals(from)) {
-                    session.send(message);
+
+    }*/
+
+    public void send(Message msg) {
+        if(msg instanceof Broadcast) {
+            //broadcast(msg.getSender(), msg));
+            synchronized (sessions) {
+                for (Session session : sessions) {
+                    if (!session.equals(msg.getSender())) {
+                        session.send(msg.toString());
+                    }
                 }
             }
         }
-    }
-
-    public void send(Session from, Session to, String message) {
-        message = "[ID:" + from.getNick() + "]: " + message;
+        else if(msg instanceof Notice) {
+            msg.getRecipient().send(msg.toString());
+        }
+        //message = "" + from + "" + message;
         //Session to = findSessionByID(id);
-        Utils.log("Message from [ID:" + from.getId() + "] to [ID:" + to.getId() + "]");
-        to.send(message);
+        //Utils.log("Message from [ID:" + from.getId() + "] to [ID:" + to.getId() + "]");
+        //to.send(message);
+
     }
 
     public Session findSessionByID(long id) {
@@ -76,7 +88,7 @@ public final class Server implements Runnable {
     }
 
     public void kill(Session session) {
-        Utils.log("Killed: " + session.getId());
+        Utils.log("Killed: " + session);
         sessions.remove(session);
     }
 

@@ -4,6 +4,9 @@ import chatServer.Server;
 import chatServer.Session;
 import chatServer.Utils;
 import chatServer.command.BaseCommand;
+import chatServer.message.Broadcast;
+import chatServer.message.Message;
+import chatServer.message.Notice;
 
 /**
  * User: Piotr Kapera
@@ -16,13 +19,15 @@ public class Msg extends BaseCommand {
         Utils.log("* msg command");
 
         if(params.length == 2) {
-            server.broadcast(session, params[1]);
+            //server.broadcast(session, params[1]);
+            server.send(new Broadcast(session, params[1]));
         } else {
             Session to = server.findSessionByID(Long.parseLong(params[1]));
             if(to == null) {
-                session.notify("Unknown recipient");
+                //session.notify("Unknown recipient");
+                server.send(new Notice(session, "Unknown recipient"));
             } else {
-                server.send(session, to, params[2]);
+                server.send(new Message(session, to, params[2]));
             }
         }
     }
