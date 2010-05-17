@@ -18,6 +18,11 @@ public class Session extends Thread {
     private String nick = "";
     private boolean closed = false;
 
+    /**
+     *
+     * @param socket
+     * @param server
+     */
     public Session(Socket socket, Server server) {
         this.socket = socket;
         this.server = server;
@@ -34,6 +39,9 @@ public class Session extends Thread {
         Utils.log("Nowa sesja! ID:" + this + " (" + socket + ")");
     }
 
+    /**
+     * 
+     */
     public void run() {
         try {
             out.println("ID:" + getId() + " joined chat!");
@@ -66,18 +74,34 @@ public class Session extends Thread {
         }
     }
 
+    /**
+     * 
+     * @param message
+     */
     public void send(String message) {
         out.println(message);
     }
 
+    /**
+     * 
+     * @return
+     */
     public long getId() {
         return id;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getNick() {
         return nick.isEmpty() ? Long.toString(getId()) : nick;
     }
 
+    /**
+     * 
+     * @param nick
+     */
     public void setNick(String nick) {
         this.nick = nick;
     }

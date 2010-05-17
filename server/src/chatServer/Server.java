@@ -17,6 +17,9 @@ public final class Server implements Runnable {
     private int port;
     private final Vector<Session> sessions = new Vector<Session>();
 
+    /**
+     *
+     */
     public void run() {
         try {
             ServerSocket listener = new ServerSocket(port);
@@ -33,14 +36,26 @@ public final class Server implements Runnable {
         }
     }
 
+    /**
+     * 
+     * @return
+     */
     public int getPort() {
         return port;
     }
 
+    /**
+     * 
+     * @param port
+     */
     public void setPort(int port) {
         this.port = port;
     }
 
+    /**
+     * 
+     * @param msg
+     */
     public void send(Message msg) {
         if(msg instanceof Broadcast) {
             synchronized (sessions) {
@@ -56,6 +71,11 @@ public final class Server implements Runnable {
         }
     }
 
+    /**
+     * 
+     * @param id
+     * @return
+     */
     public Session findSessionByID(long id) {
         for (Session session : sessions) {
             if (session.getId() == id) {
@@ -65,6 +85,11 @@ public final class Server implements Runnable {
         return null;
     }
 
+    /**
+     * 
+     * @param nick
+     * @return
+     */
     public boolean checkIfNickOccupied(String nick) {
         for (Session session : sessions) {
             if (session.getNick().equals(nick)) {
@@ -74,11 +99,19 @@ public final class Server implements Runnable {
         return false;
     }
 
+    /**
+     * 
+     * @param session
+     */
     public void kill(Session session) {
         Utils.log("Killed: " + session);
         sessions.remove(session);
     }
 
+    /**
+     * 
+     * @return
+     */
     public Vector<Session> getSessions() {
         return sessions;
     }

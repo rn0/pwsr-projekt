@@ -18,6 +18,13 @@ public class Message {
     protected long timestamp;
     protected SimpleDateFormat timestampFormater = new SimpleDateFormat("HH:mm:ss");
 
+    /**
+     * Domyślny konstruktor
+     * 
+     * @param from Nadawca wiadomości
+     * @param to Odbiorca wiadomości
+     * @param message Wiadomość do wysłania
+     */
     public Message(Session from, Session to, String message) {
         this.from = from;
         this.to = to;
@@ -25,18 +32,34 @@ public class Message {
         timestamp = new Date().getTime();
     }
 
+    /**
+     * 
+     * @return Sformatowana wiadomość
+     */
     public String toString() {
         return getTextTimestamp() + " " + from + ": " + message;
     }
 
+    /**
+     * 
+     * @return
+     */
     public Session getSender() {
         return from;
     }
 
+    /**
+     * 
+     * @return
+     */
     public Session getRecipient() {
         return to;
     }
 
+    /**
+     * 
+     * @return
+     */
     protected String getTextTimestamp() {
         return "<" + timestampFormater.format(new Date(timestamp)) + ">";
     }

@@ -28,14 +28,29 @@ public class CommandParser {
         return instance;
     }
 
+    /**
+     * Domyślny konstruktor
+     */
     private CommandParser() {
         commands = new HashMap<String, BaseCommand>();
     }
 
+    /**
+     * Wyłuskuje parametry z podanego ciągu znaków
+     *
+     * @param line
+     * @return tablica parametrów
+     */
     private String[] extractParams(String line) {
         return line.trim().substring(1).split(" ");
     }
 
+    /**
+     *
+     * @param command
+     * @return
+     * @throws Exception
+     */
     private BaseCommand prepareCommand(String command) throws Exception {
         BaseCommand cmd = null;
 
@@ -53,6 +68,13 @@ public class CommandParser {
         return cmd;
     }
 
+    /**
+     *
+     * @param server
+     * @param session
+     * @param line
+     * @throws Exception
+     */
     public void handle(Server server, Session session, String line) throws Exception {
         String[] params = extractParams(line);
         String command = Utils.capitalize(params[0]);
@@ -60,6 +82,12 @@ public class CommandParser {
         prepareCommand(command).execute(server, session, params);
     }
 
+    /**
+     * 
+     * @param command
+     * @return
+     * @throws Exception
+     */
     private Constructor findCommand(String command) throws Exception {
         String path = "chatServer.command.handlers." + Utils.capitalize(command);
         Class clazz = Class.forName(path);

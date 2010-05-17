@@ -8,6 +8,12 @@ import chatServer.Session;
  * Time: 20:42:16
  */
 public class Broadcast extends Message {
+    /**
+     * Domyślny konstruktor
+     *
+     * @param from Nadawca wiadomości
+     * @param message Wiadomość do wysłania
+     */
     public Broadcast(Session from, String message) {
         super(from, null, message);
     }
