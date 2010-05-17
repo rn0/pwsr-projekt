@@ -6,7 +6,6 @@ import chatServer.message.Notice;
 
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.List;
 import java.util.Vector;
 
 /**
@@ -42,15 +41,8 @@ public final class Server implements Runnable {
         this.port = port;
     }
 
-    /*private void broadcast(Session from, String message) {
-        message = "" + from + "" + message;
-        Utils.log("Broadcast: " + message);
-
-    }*/
-
     public void send(Message msg) {
         if(msg instanceof Broadcast) {
-            //broadcast(msg.getSender(), msg));
             synchronized (sessions) {
                 for (Session session : sessions) {
                     if (!session.equals(msg.getSender())) {
@@ -62,11 +54,6 @@ public final class Server implements Runnable {
         else if(msg instanceof Notice) {
             msg.getRecipient().send(msg.toString());
         }
-        //message = "" + from + "" + message;
-        //Session to = findSessionByID(id);
-        //Utils.log("Message from [ID:" + from.getId() + "] to [ID:" + to.getId() + "]");
-        //to.send(message);
-
     }
 
     public Session findSessionByID(long id) {

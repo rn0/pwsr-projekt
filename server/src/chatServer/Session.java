@@ -37,19 +37,17 @@ public class Session extends Thread {
     public void run() {
         try {
             out.println("ID:" + getId() + " joined chat!");
-            //String message = "";
             while (!closed) {
-                String message = in.readLine();
-                if(message == null || message.isEmpty()) {
+                String line = in.readLine();
+                if(line == null || line.isEmpty()) {
                     closed = true;
                 }
                 else {
                     try {
-                        CommandParser.getInstance().handle(server, this, message);
+                        CommandParser.getInstance().handle(server, this, line);
                     } catch(Exception e) {
                         Utils.log(e);
                     }
-                    //server.broadcast(this, message);
                 }
             }
         } catch (Exception e) {
@@ -71,10 +69,6 @@ public class Session extends Thread {
     public void send(String message) {
         out.println(message);
     }
-
-    /*public void notify(String message) {
-        send(message);
-    }*/
 
     public long getId() {
         return id;

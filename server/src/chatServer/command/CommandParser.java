@@ -14,7 +14,6 @@ import java.util.HashMap;
  */
 public class CommandParser {
     private static CommandParser instance;
-    //private Class[] proto;
     private HashMap<String, BaseCommand> commands;
 
     /**
@@ -30,9 +29,6 @@ public class CommandParser {
     }
 
     private CommandParser() {
-        //proto = new Class[1];
-        //proto[0] = String[].class;
-
         commands = new HashMap<String, BaseCommand>();
     }
 
@@ -47,7 +43,7 @@ public class CommandParser {
             if (commands.containsKey(command)) {
                 cmd = commands.get(command);
             } else {
-                cmd = (BaseCommand) findCommand(command).newInstance();//new Object[] { params });
+                cmd = (BaseCommand) findCommand(command).newInstance();
                 commands.put(command, cmd);
             }
         } catch(Exception e) {
@@ -66,16 +62,7 @@ public class CommandParser {
 
     private Constructor findCommand(String command) throws Exception {
         String path = "chatServer.command.handlers." + Utils.capitalize(command);
-        //Constructor commandClass;
-
-        //try {
-            Class clazz = Class.forName(path);
-            return clazz.getConstructor();//String[].class);
-        //} catch (ClassNotFoundException ex) {
-        //    ex.printStackTrace();
-        //} catch (Exception e) {
-       //     e.printStackTrace();
-        //}
-        //throw new AssertionError("Unknown algorithm: " + path);
+        Class clazz = Class.forName(path);
+        return clazz.getConstructor();
     }
 }

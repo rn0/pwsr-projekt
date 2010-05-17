@@ -19,12 +19,10 @@ public class Msg extends BaseCommand {
         Utils.log("* msg command");
 
         if(params.length == 2) {
-            //server.broadcast(session, params[1]);
             server.send(new Broadcast(session, params[1]));
         } else {
             Session to = server.findSessionByID(Long.parseLong(params[1]));
             if(to == null) {
-                //session.notify("Unknown recipient");
                 server.send(new Notice(session, "Unknown recipient"));
             } else {
                 server.send(new Message(session, to, params[2]));
