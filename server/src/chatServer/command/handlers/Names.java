@@ -12,7 +12,7 @@ import java.util.Vector;
  * Date: 2010-05-17
  * Time: 20:11:59
  */
-public class List extends BaseCommand {
+public class Names extends BaseCommand {
     @Override
     public void execute(Server server, Session session, String[] params) {
         Vector<String> names = new Vector<String>();
@@ -24,6 +24,6 @@ public class List extends BaseCommand {
 
     @Override
     public String getUsage() {
-        return "/list";
+        return "/names";
     }
 }
