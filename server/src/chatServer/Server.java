@@ -76,9 +76,18 @@ public final class Server implements Runnable {
      * @param id
      * @return
      */
-    public Session findSessionByID(long id) {
+    public Session findSession(long id) {
         for (Session session : sessions) {
             if (session.getId() == id) {
+                return session;
+            }
+        }
+        return null;
+    }
+
+    public Session findSession(String nick) {
+        for (Session session : sessions) {
+            if (session.getNick().equals(nick)) {
                 return session;
             }
         }
@@ -105,6 +114,7 @@ public final class Server implements Runnable {
      */
     public void kill(Session session) {
         Utils.log("Killed: " + session);
+        session.close();
         sessions.remove(session);
     }
 

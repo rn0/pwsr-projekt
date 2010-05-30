@@ -45,7 +45,7 @@ public class Session extends Thread {
         server.send(new Notice(this, "twój nick: " + getNick() + " aby zmienić użyj komendy /nick <nazwa>"));
 
         if(server.getSessionsCount() == 0) {
-            privileges |= SessionPrivileges.admin;
+            privileges = getPrivileges() | SessionPrivileges.admin;
             Utils.log("Administrator ID:" + this);
             server.send(new Notice(this, "jesteś właścicielem kanału!"));
         }
@@ -72,16 +72,19 @@ public class Session extends Thread {
         } catch (Exception e) {
             Utils.log(e);
         } finally {
-            out.close();
-            try {
-                in.close();
-                socket.close();
-            } catch (IOException e) {
-                Utils.log(e);
-            }
-
+            // TODO: refactor
             server.kill(this);
             Utils.log("Połączenie zostało zakończone: " + this);
+        }
+    }
+
+    public void close() {
+        out.close();
+        try {
+            in.close();
+            socket.close();
+        } catch (IOException e) {
+            Utils.log(e);
         }
     }
 
@@ -125,5 +128,9 @@ public class Session extends Thread {
     @Override
     public String toString() {
         return "{" + getNick() + "}";
+    }
+
+    public int getPrivileges() {
+        return privileges;
     }
 }

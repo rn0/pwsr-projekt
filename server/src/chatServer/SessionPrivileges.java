@@ -8,7 +8,7 @@ package chatServer;
 
 //  http://www.vipan.com/htdocs/bitwisehelp.html
     
-public final class SessionPrivileges {
-    static final int user = 1;    // 2^^0    000...00000001
-    static final int admin = 2;    // 2^^1    000...00000010
+public class SessionPrivileges {
+    public static final int user = 1;    // 2^^0    000...00000001
+    public static final int admin = 2;    // 2^^1    000...00000010
 }
