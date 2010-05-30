@@ -1,6 +1,9 @@
 package chatServer;
 
 import chatServer.command.CommandParser;
+import chatServer.message.Broadcast;
+import chatServer.message.Notice;
+
 import java.io.*;
 import java.net.Socket;
 
@@ -17,6 +20,7 @@ public class Session extends Thread {
     private long id;
     private String nick = "";
     private boolean closed = false;
+    private int privileges = SessionPrivileges.user;
 
     /**
      *
@@ -37,6 +41,14 @@ public class Session extends Thread {
         }
 
         Utils.log("Nowa sesja! ID:" + this + " (" + socket + ")");
+        server.send(new Broadcast(this, "dołączył do chata!"));
+        server.send(new Notice(this, "twój nick: " + getNick() + " aby zmienić użyj komendy /nick <nazwa>"));
+
+        if(server.getSessionsCount() == 0) {
+            privileges |= SessionPrivileges.admin;
+            Utils.log("Administrator ID:" + this);
+            server.send(new Notice(this, "jesteś właścicielem kanału!"));
+        }
     }
 
     /**
@@ -44,7 +56,6 @@ public class Session extends Thread {
      */
     public void run() {
         try {
-            out.println("ID:" + getId() + " joined chat!");
             while (!closed) {
                 String line = in.readLine();
                 if(line == null || line.isEmpty()) {
