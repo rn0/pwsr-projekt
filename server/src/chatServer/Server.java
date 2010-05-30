@@ -115,4 +115,12 @@ public final class Server implements Runnable {
     public Vector<Session> getSessions() {
         return sessions;
     }
+
+    /**
+     * 
+     * @return number of active sessions
+     */
+    public int getSessionsCount() {
+        return sessions.size();
+    }
 }
