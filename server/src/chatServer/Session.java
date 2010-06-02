@@ -6,6 +6,9 @@ import chatServer.message.Notice;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.EnumSet;
+
+import static java.util.EnumSet.of;
 
 /**
  * User: Piotr Kapera
@@ -20,7 +23,12 @@ public class Session extends Thread {
     private long id;
     private String nick = "";
     private boolean closed = false;
-    private int privileges = SessionPrivileges.user;
+    /* TODO: EnumSet is not synchronized.
+       If multiple threads access an enum set concurrently,
+       and at least one of the threads modifies the set,
+       it should be synchronized externally.
+     */
+    private EnumSet<UserModes> modes = EnumSet.of(UserModes.user);
 
     /**
      *
@@ -44,8 +52,9 @@ public class Session extends Thread {
         server.send(new Broadcast(this, "dołączył do chata!"));
         server.send(new Notice(this, "twój nick: " + getNick() + " aby zmienić użyj komendy /nick <nazwa>"));
 
+        //modes.add(UserModes.user);
         if(server.getSessionsCount() == 0) {
-            privileges = getPrivileges() | SessionPrivileges.admin;
+            modes.add(UserModes.o);
             Utils.log("Administrator ID:" + this);
             server.send(new Notice(this, "jesteś właścicielem kanału!"));
         }
@@ -130,7 +139,7 @@ public class Session extends Thread {
         return "{" + getNick() + "}";
     }
 
-    public int getPrivileges() {
-        return privileges;
+    public EnumSet<UserModes> getModes() {
+        return modes;
     }
 }
