@@ -28,7 +28,7 @@ public class Session extends Thread {
        and at least one of the threads modifies the set,
        it should be synchronized externally.
      */
-    private EnumSet<UserModes> modes = EnumSet.of(UserModes.user);
+    private EnumSet<UserMode> modes = EnumSet.of(UserMode.u);
 
     /**
      *
@@ -39,7 +39,7 @@ public class Session extends Thread {
         this.socket = socket;
         this.server = server;
         id = Utils.crc32(socket.toString());
-        
+
         try {
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
@@ -52,9 +52,8 @@ public class Session extends Thread {
         server.send(new Broadcast(this, "dołączył do chata!"));
         server.send(new Notice(this, "twój nick: " + getNick() + " aby zmienić użyj komendy /nick <nazwa>"));
 
-        //modes.add(UserModes.user);
         if(server.getSessionsCount() == 0) {
-            modes.add(UserModes.o);
+            modes.add(UserMode.o);
             Utils.log("Administrator ID:" + this);
             server.send(new Notice(this, "jesteś właścicielem kanału!"));
         }
@@ -139,7 +138,7 @@ public class Session extends Thread {
         return "{" + getNick() + "}";
     }
 
-    public EnumSet<UserModes> getModes() {
+    public EnumSet<UserMode> getModes() {
         return modes;
     }
 }

@@ -2,7 +2,7 @@ package chatServer.command.handlers;
 
 import chatServer.Server;
 import chatServer.Session;
-import chatServer.UserModes;
+import chatServer.UserMode;
 import chatServer.command.BaseCommand;
 import chatServer.message.Broadcast;
 import chatServer.message.Notice;
@@ -15,7 +15,7 @@ import chatServer.message.Notice;
 public class Kick extends BaseCommand {
     @Override
     public void execute(Server server, Session session, String[] params) {
-        if(session.getModes().contains(UserModes.o)) {
+        if(session.getModes().contains(UserMode.o)) {
             Session to = server.findSession(params[1]);
             if(to == null) {
                 server.send(new Notice(session, "Unknown recipient"));
