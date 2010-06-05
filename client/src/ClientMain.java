@@ -1,5 +1,4 @@
-import chatClient.Gui.Connect;
-import chatClient.Gui.Gui;
+import chatClient.Gui.Main;
 
 import javax.swing.*;
 
@@ -15,13 +14,8 @@ public class ClientMain {
         } catch(Exception e) {
           System.out.println("Error setting native LAF: " + e);
         }
-        
-        Connect connect = new Connect();
-        connect.setTitle("Chat");
-        connect.pack();
-        connect.setVisible(true);
 
-        Gui dialog = new Gui();
+        Main dialog = new Main();
         dialog.setTitle("Chat");
         dialog.pack();
         dialog.setVisible(true);
