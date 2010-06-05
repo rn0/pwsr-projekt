@@ -84,30 +84,25 @@ public class Main extends JDialog {
     public void addText(final String text) {
         try {
             if (SwingUtilities.isEventDispatchThread()) {
-                try {
-                    insertText(text);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            else {
+                insertText(text);
+            } else {
                 SwingUtilities.invokeAndWait(new Runnable() {
                     public void run() {
-                        try {
-                            insertText(text);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        insertText(text);
                     }
                 });
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
 
         }
     }
 
-    private void insertText(String text) throws Exception {
-         doc.insertString(doc.getLength(), text + "\n", null);
+    private void insertText(String text) {
+        try {
+            doc.insertString(doc.getLength(), text + "\n", null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void markConnected() {
