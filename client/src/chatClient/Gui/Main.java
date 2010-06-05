@@ -1,7 +1,6 @@
 package chatClient.Gui;
 
 import chatClient.Client;
-import chatClient.Config;
 
 import javax.swing.*;
 import javax.swing.text.DefaultStyledDocument;
@@ -10,9 +9,9 @@ import java.awt.event.*;
 
 public class Main extends JDialog {
     private JPanel contentPane;
-    private JButton buttonOK;
+    private JButton sendButton;
     private JTabbedPane tabbedPane1;
-    private JTextField textField1;
+    private JTextField inputField;
     private JTextPane textPane1;
     private JTextField ipAddressTextField;
     private JTextField portTextField;
@@ -27,7 +26,7 @@ public class Main extends JDialog {
     public Main() {
         setContentPane(contentPane);
         setModal(true);
-        getRootPane().setDefaultButton(buttonOK);
+        getRootPane().setDefaultButton(sendButton);
 
         sc = new StyleContext();
         doc = new DefaultStyledDocument(sc);
@@ -40,9 +39,10 @@ public class Main extends JDialog {
             addText(e.toString());
         }
 
-        buttonOK.addActionListener(new ActionListener() {
+        sendButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                onOK();
+                clientThread.send(inputField.getText());
+                inputField.setText("");
             }
         });
 

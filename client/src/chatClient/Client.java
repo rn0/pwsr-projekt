@@ -80,4 +80,10 @@ public class Client extends Thread {
     public void setIp(String ip) {
         this.ip = ip;
     }
+
+    public void send(String text) {
+        if(!text.isEmpty()) {
+            out.println(text);
+        }
+    }
 }
