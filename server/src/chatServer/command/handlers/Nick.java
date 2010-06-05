@@ -21,6 +21,7 @@ public class Nick extends BaseCommand {
                 server.send(new Notice(session, "Nick already occupied"));
             } else {
                 session.setNick(params[1]);
+                server.send(new Notice(session, "Nick changed to: " + params[1]));
             }
         }
     }
