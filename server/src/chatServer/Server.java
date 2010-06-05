@@ -121,8 +121,7 @@ public final class Server implements Runnable {
         if(!channels.contains(channel)) {
             return null;
         }
-        // TODO: 
-        return null;
+        return channel.getSessions();
     }
 
     /**

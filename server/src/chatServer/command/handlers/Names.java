@@ -1,5 +1,6 @@
 package chatServer.command.handlers;
 
+import chatServer.Channel;
 import chatServer.Server;
 import chatServer.Session;
 import chatServer.command.BaseCommand;
@@ -19,7 +20,19 @@ public class Names extends BaseCommand {
         for (Session s : server.getSessions()) {
             names.add(s.getNick());
         }
-        server.send(new Notice(session, names.toString()));
+        if(params.length == 1) {
+            server.send(new Notice(session, server.getSessions().toString()));
+        }
+        else if(params.length == 2) {
+            Channel chan = server.findChannel(params[1]);
+            if(chan == null) {
+                server.send(new Notice(session, "Unknown channel: " + params[1]));
+            }
+            else {
+                server.send(new Notice(session, server.getSessions(chan).toString()));
+            }
+        }
+
     }
 
     @Override
