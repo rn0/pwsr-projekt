@@ -4,7 +4,10 @@ import chatClient.Client;
 
 import javax.swing.*;
 import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
+import java.awt.*;
 import java.awt.event.*;
 
 public class Main extends JDialog {
@@ -22,7 +25,6 @@ public class Main extends JDialog {
     private StyleContext sc;
     private Client clientThread;
 
-
     public Main() {
         setContentPane(contentPane);
         setModal(true);
@@ -31,6 +33,7 @@ public class Main extends JDialog {
         sc = new StyleContext();
         doc = new DefaultStyledDocument(sc);
         textPane1.setDocument(doc);
+        textPane1.addCaretListener(new CaretUpdater());
 
         try {
             clientThread = new Client(this);
@@ -69,6 +72,7 @@ public class Main extends JDialog {
         });
         buttonDisconnect.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                markDisconnected();
             }
         });
     }
@@ -117,5 +121,7 @@ public class Main extends JDialog {
         portTextField.setEnabled(true);
         buttonConnect.setEnabled(true);
         buttonDisconnect.setEnabled(false);
+
+        this.tabbedPane1.addTab("tab", new Channel());
     }
 }
