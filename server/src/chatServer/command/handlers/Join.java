@@ -5,6 +5,7 @@ import chatServer.Server;
 import chatServer.Session;
 import chatServer.Utils;
 import chatServer.command.BaseCommand;
+import chatServer.message.Broadcast;
 import chatServer.message.Notice;
 
 /**
@@ -23,7 +24,9 @@ public class Join extends BaseCommand {
                 Utils.log("* new channel: " + params[1]);
             }
             channel.addSession(session);
+            session.addChannel(channel);
             server.send(new Notice(session, "Channel join: " + params[1] + "; Users on channel: " + channel.getSessions().toString()));
+            channel.send(new Broadcast(session, " joined channel"));
         }
     }
 
