@@ -42,6 +42,9 @@ public class Client extends Thread {
             
             while(true) {
                 line = in.readLine();
+                if(line.substring(11).startsWith("Channel join: ")) {
+                    System.out.println("new tab!");
+                }
                 System.out.println(line);
                 this.main.addText(line);
             }
