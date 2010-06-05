@@ -47,6 +47,10 @@ public class Channel {
         getSessions().add(session);
     }
 
+    public void removeSession(Session session) {
+        getSessions().remove(session);
+    }
+
     /**
      *
      * @param id

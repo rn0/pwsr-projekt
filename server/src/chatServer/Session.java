@@ -53,13 +53,19 @@ public class Session extends Thread {
         }
 
         Utils.log("Nowa sesja! ID:" + this + " (" + socket + ")");
-        //server.send(new Broadcast(this, "dołączył do chata!"));
+        this.send(new Broadcast(this, "dołączył do chata!"));
         server.send(new Notice(this, "twój nick: " + getNick() + " aby zmienić użyj komendy /nick <nazwa>"));
 
         if(server.getSessionsCount() == 0) {
             modes.add(UserMode.o);
             Utils.log("Administrator ID:" + this);
             server.send(new Notice(this, "jesteś właścicielem kanału!"));
+        }
+    }
+
+    private void send(Broadcast message) {
+        for (Channel channel : channels) {
+            channel.send(message);
         }
     }
 
@@ -85,14 +91,18 @@ public class Session extends Thread {
             Utils.log(e);
         } finally {
             // TODO: refactor
+            close();
             server.kill(this);
             Utils.log("Połączenie zostało zakończone: " + this);
         }
     }
 
     public void close() {
+        Utils.log("Session close");
         for (Channel channel : channels) {
             channel.send(new Broadcast(this, "Opuściłem kanał"));
+            channel.removeSession(this);
+            System.out.println("Part: " + channel);
         }
         
         out.close();
