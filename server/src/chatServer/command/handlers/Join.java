@@ -5,6 +5,7 @@ import chatServer.Server;
 import chatServer.Session;
 import chatServer.Utils;
 import chatServer.command.BaseCommand;
+import chatServer.message.Notice;
 
 /**
  * User: Piotr Kapera
@@ -22,6 +23,7 @@ public class Join extends BaseCommand {
                 Utils.log("* new channel: " + params[1]);
             }
             channel.addSession(session);
+            server.send(new Notice(session, "Channel join: " + params[1] + "; Users on channel: " + channel.getSessions().toString()));
         }
     }
 
