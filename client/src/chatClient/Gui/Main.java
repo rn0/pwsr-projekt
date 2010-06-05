@@ -1,5 +1,6 @@
 package chatClient.Gui;
 
+import chatClient.Client;
 import chatClient.Config;
 
 import javax.swing.*;
@@ -20,6 +21,8 @@ public class Main extends JDialog {
 
     private final DefaultStyledDocument doc;
     private StyleContext sc;
+    private Client clientThread;
+
 
     public Main() {
         setContentPane(contentPane);
@@ -29,6 +32,13 @@ public class Main extends JDialog {
         sc = new StyleContext();
         doc = new DefaultStyledDocument(sc);
         textPane1.setDocument(doc);
+
+        try {
+            clientThread = new Client(this);
+        }
+        catch(Exception e) {
+            addText(e.toString());
+        }
 
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -51,13 +61,10 @@ public class Main extends JDialog {
         
         buttonConnect.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Config conf = Config.getInstance();
-                Config c = Config.getInstance();
-                c.setIp(ipAddressTextField.getText());
-                int port = Integer.parseInt(portTextField.getText());
-                c.setPort(port);
-                
-                addText("Łączenie z serverem: ");
+                clientThread.setIp(ipAddressTextField.getText());
+                clientThread.setPort(Integer.parseInt(portTextField.getText()));
+                clientThread.start();
+                System.out.println("After Client thread");
             }
         });
         buttonDisconnect.addActionListener(new ActionListener() {
@@ -74,11 +81,11 @@ public class Main extends JDialog {
         dispose();
     }
 
-    private void addText(final String text) {
+    public void addText(final String text) {
         try {
             if (SwingUtilities.isEventDispatchThread()) {
                 try {
-                    doc.insertString(0, text, null);
+                    doc.insertString(0, text + "\n", null);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -87,7 +94,7 @@ public class Main extends JDialog {
                 SwingUtilities.invokeAndWait(new Runnable() {
                     public void run() {
                         try {
-                            doc.insertString(0, text, null);
+                            doc.insertString(0, text + "\n", null);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -97,5 +104,19 @@ public class Main extends JDialog {
         } catch(Exception e) {
 
         }
+    }
+
+    public void markConnected() {
+        ipAddressTextField.setEnabled(false);
+        portTextField.setEnabled(false);
+        buttonConnect.setEnabled(false);
+        buttonDisconnect.setEnabled(true);
+    }
+
+    public void markDisconnected() {
+        ipAddressTextField.setEnabled(true);
+        portTextField.setEnabled(true);
+        buttonConnect.setEnabled(true);
+        buttonDisconnect.setEnabled(false);
     }
 }

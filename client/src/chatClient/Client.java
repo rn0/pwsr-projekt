@@ -1,5 +1,7 @@
 package chatClient;
 
+import chatClient.Gui.Main;
+
 import java.io.*;
 import java.net.Socket;
 
@@ -12,35 +14,70 @@ public class Client extends Thread {
     private BufferedReader in;
     private PrintWriter out;
     private Socket socket;
-    private Config config;
+    private final Main main;
 
-    public Client() throws Exception {
-        config = Config.getInstance();
-        socket = new Socket(config.getIp(), config.getPort());
+    private String ip;
+    private int port;
 
-        in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
+    public Client(Main main) throws Exception {
+        this.main = main;
+        System.out.println("construct Client thread");
     }
 
     @Override
     public void run() {
+        System.out.println("run Client thread");
         try {
+         
+            if(ip.isEmpty()) {
+                throw new Exception("Invalid ip");
+            }
+            socket = new Socket(ip, port);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
+
             String line = null;
+
+            this.main.markConnected();
             
             while(true) {
                 line = in.readLine();
+                System.out.println(line);
+                this.main.addText(line);
             }
         }
         catch(Exception e) {
+            this.main.addText(e.toString());
         }
         finally {
             try {
-                in.close();
-                out.close();
-                socket.close();
+                if(in != null)
+                    in.close();
+                if(out != null)
+                    out.close();
+                if(socket != null)
+                    socket.close();
             }
             catch (IOException e) {
+                this.main.addText(e.toString());
             }
+            this.main.markDisconnected();
         }
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
     }
 }
