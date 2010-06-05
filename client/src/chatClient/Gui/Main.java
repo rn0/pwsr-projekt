@@ -85,7 +85,7 @@ public class Main extends JDialog {
         try {
             if (SwingUtilities.isEventDispatchThread()) {
                 try {
-                    doc.insertString(0, text + "\n", null);
+                    insertText(text);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -94,7 +94,7 @@ public class Main extends JDialog {
                 SwingUtilities.invokeAndWait(new Runnable() {
                     public void run() {
                         try {
-                            doc.insertString(0, text + "\n", null);
+                            insertText(text);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -104,6 +104,10 @@ public class Main extends JDialog {
         } catch(Exception e) {
 
         }
+    }
+
+    private void insertText(String text) throws Exception {
+         doc.insertString(doc.getLength(), text + "\n", null);
     }
 
     public void markConnected() {
