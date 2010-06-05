@@ -1,5 +1,6 @@
 package chatServer.message;
 
+import chatServer.Channel;
 import chatServer.Session;
 
 /**
@@ -12,6 +13,7 @@ public class Broadcast extends Message {
      * Domyślny konstruktor
      *
      * @param from Nadawca wiadomości
+     * @param to 
      * @param message Wiadomość do wysłania
      */
     public Broadcast(Session from, String message) {

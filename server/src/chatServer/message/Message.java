@@ -1,5 +1,6 @@
 package chatServer.message;
 
+import chatServer.Channel;
 import chatServer.Session;
 
 import java.text.DateFormat;
@@ -14,6 +15,7 @@ import java.util.Date;
 public class Message {
     protected Session from;
     protected Session to;
+    private Channel channel;
     protected String message;
     protected long timestamp;
     protected SimpleDateFormat timestampFormater = new SimpleDateFormat("HH:mm:ss");
@@ -62,5 +64,13 @@ public class Message {
      */
     protected String getTextTimestamp() {
         return "<" + timestampFormater.format(new Date(timestamp)) + ">";
+    }
+
+    public Channel getChannel() {
+        return channel;
+    }
+
+    public void setChannel(Channel channel) {
+        this.channel = channel;
     }
 }

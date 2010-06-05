@@ -1,5 +1,6 @@
 package chatServer.command.handlers;
 
+import chatServer.Channel;
 import chatServer.Server;
 import chatServer.Session;
 import chatServer.Utils;
@@ -18,16 +19,22 @@ public class Msg extends BaseCommand {
     public void execute(Server server, Session session, String[] params) {
         Utils.log("* msg command");
 
-        if(params.length == 2) {
-            server.send(new Broadcast(session, params[1]));
-        } else {
+        //if(params.length == 2) {
+        //    server.send(new Broadcast(session, params[1]));
+        //} else {
             Session to = server.findSession(params[1]);
             if(to == null) {
-                server.send(new Notice(session, "Unknown recipient"));
+                Channel channel = server.findChannel(params[1]);
+                if(channel == null) {
+                    server.send(new Notice(session, "Unknown recipient"));
+                }
+                else {
+                    channel.send(new Broadcast(session, params[2]));
+                }
             } else {
                 server.send(new Message(session, to, params[2]));
             }
-        }
+        //}
     }
 
     @Override

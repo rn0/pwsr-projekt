@@ -21,7 +21,7 @@ public class Kick extends BaseCommand {
                 server.send(new Notice(session, "Unknown recipient"));
             } else {
                 server.send(new Notice(to, "Zostałeś wykopany z kanału! :D"));
-                server.send(new Broadcast(to, "Zostałem wykopany z kanału!"));
+                //server.send(new Broadcast(to, "Zostałem wykopany z kanału!"));
                 server.kill(to);
             }
         }

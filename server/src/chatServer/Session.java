@@ -7,6 +7,9 @@ import chatServer.message.Notice;
 import java.io.*;
 import java.net.Socket;
 import java.util.EnumSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
 
 import static java.util.EnumSet.of;
 
@@ -29,6 +32,7 @@ public class Session extends Thread {
        it should be synchronized externally.
      */
     private EnumSet<UserMode> modes = EnumSet.of(UserMode.u);
+    private final Vector<Channel> channels = new Vector<Channel>();
 
     /**
      *
@@ -49,7 +53,7 @@ public class Session extends Thread {
         }
 
         Utils.log("Nowa sesja! ID:" + this + " (" + socket + ")");
-        server.send(new Broadcast(this, "dołączył do chata!"));
+        //server.send(new Broadcast(this, "dołączył do chata!"));
         server.send(new Notice(this, "twój nick: " + getNick() + " aby zmienić użyj komendy /nick <nazwa>"));
 
         if(server.getSessionsCount() == 0) {
@@ -87,6 +91,10 @@ public class Session extends Thread {
     }
 
     public void close() {
+        for (Channel channel : channels) {
+            channel.send(new Broadcast(this, "Opuściłem kanał"));
+        }
+        
         out.close();
         try {
             in.close();
@@ -140,5 +148,13 @@ public class Session extends Thread {
 
     public EnumSet<UserMode> getModes() {
         return modes;
+    }
+
+    public Vector<Channel> getChannels() {
+        return channels;
+    }
+
+    public void addChannel(Channel channel) {
+        channels.add(channel);
     }
 }
