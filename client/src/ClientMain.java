@@ -1,6 +1,5 @@
-import chatClient.Config;
-import chatClient.Connect;
-import chatClient.Gui;
+import chatClient.Gui.Connect;
+import chatClient.Gui.Gui;
 
 import javax.swing.*;
 

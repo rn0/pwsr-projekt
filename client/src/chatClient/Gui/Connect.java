@@ -1,4 +1,6 @@
-package chatClient;
+package chatClient.Gui;
+
+import chatClient.Config;
 
 import javax.swing.*;
 import java.awt.event.*;
