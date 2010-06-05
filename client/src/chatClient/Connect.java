@@ -1,34 +1,30 @@
 package chatClient;
 
 import javax.swing.*;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultStyledDocument;
-import javax.swing.text.StyleContext;
 import java.awt.event.*;
-import java.lang.reflect.InvocationTargetException;
 
-public class Gui extends JDialog {
+public class Connect extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
-    private JTabbedPane tabbedPane1;
-    private JTextField textField1;
-    private JTextPane textPane1;
+    private JButton buttonCancel;
+    private JTextField ipAddress;
+    private JTextField portNumber;
 
-    private final DefaultStyledDocument doc;
-    private StyleContext sc;
-
-    public Gui() {
+    public Connect() {
+        
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
 
-        sc = new StyleContext();
-        doc = new DefaultStyledDocument(sc);
-        textPane1.setDocument(doc);
-
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 onOK();
+            }
+        });
+
+        buttonCancel.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                onCancel();
             }
         });
 
@@ -46,24 +42,14 @@ public class Gui extends JDialog {
                 onCancel();
             }
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-
-        try {
-            SwingUtilities.invokeAndWait(new Runnable() {
-                public void run() {
-                    try {
-                        doc.insertString(0, "Podłączony do servera: " + Config.getInstance().getIp(), null);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-        } catch(Exception e) {
-            
-        }
     }
 
     private void onOK() {
-// add your code here
+        Config c = Config.getInstance();
+        c.setIp(ipAddress.getText());
+        int port = Integer.parseInt(portNumber.getText());
+        c.setPort(port);
+
         dispose();
     }
 
