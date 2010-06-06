@@ -5,6 +5,8 @@ import chatServer.command.BaseCommand;
 import chatServer.message.Broadcast;
 import chatServer.message.Notice;
 
+import java.util.EnumSet;
+
 /**
  * User: Piotr Kapera
  * Date: 2010-05-30
@@ -16,7 +18,7 @@ public class Kick extends BaseCommand {
         Utils.log("* kick command");
         if(params.length == 2) {
             // kick user :)
-            if(session.getModes().contains(UserMode.o)) {
+            if(session.getModes().get("Server").contains(UserMode.o)) {
                 Session sessionToBan = server.findSession(params[1]);
                 if(sessionToBan == null) {
                     server.send(new Notice(sessionToBan, "Unknown recipient"));
@@ -34,12 +36,19 @@ public class Kick extends BaseCommand {
             if(chan == null) {
                 server.send(new Notice(session, "Unknown channel"));
             } else {
-                Session sessionToBan = server.findSession(params[2]);
-                if(sessionToBan == null) {
-                    server.send(new Notice(session, "Unknown recipient"));
+                EnumSet<UserMode> modes = session.getModes().get(chan.getName());
+                if(modes != null && modes.contains(UserMode.o)) {
+                    Session sessionToBan = chan.findSession(params[2]);
+                    if(sessionToBan == null) {
+                        server.send(new Notice(session, "Unknown recipient"));
+                    } else {
+                        chan.removeSession(sessionToBan);
+                        sessionToBan.removeChannel(chan);
+                        server.send(new Notice(sessionToBan, "Zostałeś wykopany z kanału " + chan));
+                        chan.send(new Broadcast(sessionToBan, "Został wykopany z kanału"));
+                    }
                 } else {
-                    chan.removeSession(sessionToBan);
-                    server.send(new Notice(sessionToBan, "Zostałeś wykopany z kanału! :D"));
+                    server.send(new Notice(session, "Brak wystarczajacych uprawnien"));
                 }
             }
         }

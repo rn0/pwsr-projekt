@@ -1,9 +1,6 @@
 package chatServer.command.handlers;
 
-import chatServer.Channel;
-import chatServer.Server;
-import chatServer.Session;
-import chatServer.Utils;
+import chatServer.*;
 import chatServer.command.BaseCommand;
 import chatServer.message.Broadcast;
 import chatServer.message.Notice;
@@ -26,7 +23,14 @@ public class Join extends BaseCommand {
             channel.addSession(session);
             session.addChannel(channel);
             server.send(new Notice(session, "Channel join: " + params[1] + "; Users on channel: " + channel.getSessions().toString()));
-            channel.send(new Broadcast(session, " joined channel"));
+
+            if(channel.getSessionsCount() == 1) {
+                Utils.log("Channel " + channel + " administrator ID:" + session);
+                server.send(new Notice(session, "jesteś właścicielem kanału!"));
+                session.getModes().get(channel.getName()).add(UserMode.o);
+            }
+            
+            channel.send(new Broadcast(session, "joined channel"));
         }
     }
 

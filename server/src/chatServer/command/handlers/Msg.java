@@ -29,7 +29,12 @@ public class Msg extends BaseCommand {
                     server.send(new Notice(session, "Unknown recipient"));
                 }
                 else {
-                    channel.send(new Broadcast(session, params[2]));
+                    if(channel.getSessions().contains(session)) {
+                        channel.send(new Broadcast(session, params[2]));
+                    }
+                    else {
+                        server.send(new Notice(session, "use /join before /msg"));
+                    }
                 }
             } else {
                 server.send(new Message(session, to, params[2]));

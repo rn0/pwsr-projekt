@@ -6,10 +6,7 @@ import chatServer.message.Notice;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
 import static java.util.EnumSet.of;
 
@@ -31,7 +28,7 @@ public class Session extends Thread {
        and at least one of the threads modifies the set,
        it should be synchronized externally.
      */
-    private EnumSet<UserMode> modes = EnumSet.of(UserMode.u);
+    private HashMap<String, EnumSet<UserMode>> modes = new HashMap<String, EnumSet<UserMode>>();
     private final Vector<Channel> channels = new Vector<Channel>();
 
     /**
@@ -43,6 +40,8 @@ public class Session extends Thread {
         this.socket = socket;
         this.server = server;
         id = Utils.crc32(socket.toString());
+
+        modes.put("Server", EnumSet.of(UserMode.u));
 
         try {
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -57,9 +56,9 @@ public class Session extends Thread {
         server.send(new Notice(this, "Nick changed to: " + getNick() + "; Aby zmienić użyj komendy /nick <nazwa>"));
 
         if(server.getSessionsCount() == 0) {
-            modes.add(UserMode.o);
+            modes.get("Server").add(UserMode.o);
             Utils.log("Administrator ID:" + this);
-            server.send(new Notice(this, "jesteś właścicielem kanału!"));
+            server.send(new Notice(this, "jesteś właścicielem serwera!"));
         }
     }
 
@@ -162,7 +161,7 @@ public class Session extends Thread {
         return "{" + getNick() + "}";
     }
 
-    public EnumSet<UserMode> getModes() {
+    public HashMap<String, EnumSet<UserMode>> getModes() {
         return modes;
     }
 
@@ -172,5 +171,9 @@ public class Session extends Thread {
 
     public void addChannel(Channel channel) {
         channels.add(channel);
+    }
+
+    public void removeChannel(Channel channel) {
+        channels.remove(channel);
     }
 }

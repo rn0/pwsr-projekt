@@ -45,6 +45,7 @@ public class Channel {
 
     public void addSession(Session session) {
         getSessions().add(session);
+        session.getModes().put(getName(), EnumSet.of(UserMode.u));
     }
 
     public void removeSession(Session session) {
@@ -98,5 +99,13 @@ public class Channel {
 
     public Vector<Session> getSessions() {
         return sessions;
+    }
+
+    /**
+     *
+     * @return number of active sessions
+     */
+    public int getSessionsCount() {
+        return sessions.size();
     }
 }
