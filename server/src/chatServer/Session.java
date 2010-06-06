@@ -53,7 +53,7 @@ public class Session extends Thread {
 
         Utils.log("Nowa sesja! ID:" + this + " (" + socket + ")");
         this.send(new Broadcast(this, "dołączył do chata!"));
-        server.send(new Notice(this, "Nick changed to: " + getNick() + "; Aby zmienić użyj komendy /nick <nazwa>"));
+        server.send(new Notice(this, "Your nick: " + getNick() + "; Aby zmienić użyj komendy /nick <nazwa>"));
 
         if(server.getSessionsCount() == 0) {
             modes.get("Server").add(UserMode.o);

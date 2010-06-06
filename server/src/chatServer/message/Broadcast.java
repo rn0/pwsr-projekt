@@ -22,6 +22,9 @@ public class Broadcast extends Message {
 
     @Override
     public String toString() {
-        return getTextTimestamp() + " " + from + ": " + message;
+        if(from == null)
+            return getTextTimestamp() + " " + message;
+        else
+            return getTextTimestamp() + " " + from + ": " + message;
     }
 }

@@ -25,12 +25,14 @@ public class Channel extends JPanel {
     private StyleContext sc;
     private Client clientThread;
     private SimpleDateFormat timestampFormater = new SimpleDateFormat("HH:mm:ss");
+    private DefaultListModel users = new DefaultListModel();
     
     public Channel(String channelName, Client client) {
         initComponents();
 
         this.clientThread = client;
         this.channelName = channelName;
+        list1.setModel(users);
         
         setName(channelName);
         //getRootPane().setDefaultButton(sendButton);
@@ -89,12 +91,30 @@ public class Channel extends JPanel {
         }
     }
 
+    public void addNewUsers(String[] nicks) {
+        int i = 0;
+        for(String nick : nicks) {
+            if(!users.contains(nick)) {
+                users.add(i, nick);
+                i++;
+            }
+        }
+    }
+    public void removeAllUsers() {
+        users.removeAllElements();
+    }
+
     private void insertText(String text) {
         try {
             doc.insertString(doc.getLength(), text + "\n", null);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void replaceNick(String oldNick, String nick) {
+        users.removeElement(oldNick);
+        users.add(users.size(), nick);
     }
 
     private void initComponents() {
@@ -113,7 +133,6 @@ public class Channel extends JPanel {
 
         //======== this ========
         setBackground(Color.white);
-
         setLayout(new BorderLayout());
 
         //======== panel3 ========

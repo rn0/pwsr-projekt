@@ -4,6 +4,7 @@ import chatServer.*;
 import chatServer.command.BaseCommand;
 import chatServer.message.Broadcast;
 import chatServer.message.Notice;
+import chatServer.message.ServerNotice;
 
 /**
  * User: Piotr Kapera
@@ -29,8 +30,8 @@ public class Join extends BaseCommand {
             if(channel != null) {
                 channel.addSession(session);
                 session.addChannel(channel);
-                server.send(new Notice(session, "Channel join: " + params[1] + ";"));
-                channel.send(new Notice(session, "Users on channel: " + channel.getSessions().toString()));
+                server.send(new Notice(session, "Channel join: " + params[1] + "; Users on channel: " + channel.getSessions().toString()));
+                server.send(new ServerNotice(session, "Users on channel: " + channel + " -> " + channel.getSessions().toString()));
 
                 if(channel.getSessionsCount() == 1) {
                     Utils.log("Channel " + channel + " administrator ID:" + session);

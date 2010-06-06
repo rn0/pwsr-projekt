@@ -5,6 +5,7 @@ import chatClient.Gui.ChatFrame;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,6 +24,7 @@ public class Client extends Thread {
     private int port;
 
     private volatile boolean running = false;
+    private Vector<String> users = new Vector<String>();
 
     public Client(ChatFrame chatFrame) throws Exception {
         this.chatFrame = chatFrame;
@@ -53,27 +55,70 @@ public class Client extends Thread {
                 System.out.println(line);
                 
                 if(line.substring(19).startsWith("Channel join:")) {
-                    Pattern p = Pattern.compile("Channel join: (#[0-9a-zA-Z]+)");
+                    Pattern p = Pattern.compile("Channel join: (#[0-9a-zA-Z]+); Users on channel: \\[([{}, 0-9a-zA-Z]+)\\]");
                     Matcher m = p.matcher(line);
                     if(m.find()) {
                         String channelName = m.group(1);
-                        //String users = m.group(1);
-                        chatFrame.registerChannel(new Channel(channelName, this));
+                        String usersStr = m.group(2);
+                        parseUserList(usersStr);
+                        Channel chan = new Channel(channelName, this);
+                        chan.addNewUsers((String[])users.toArray(new String[]{}));
+                        chatFrame.registerChannel(chan);
                         System.out.println("new tab! " + channelName);
                     }
                 }
-                else if(line.substring(19).startsWith("Nick changed to:")) {
-                    Pattern p = Pattern.compile("Nick changed to: ([0-9a-zA-Z]+)");
+                else if(line.substring(19).startsWith("Your nick:")) {
+                    Pattern p = Pattern.compile("Your nick: ([0-9a-zA-Z]+);");
                     Matcher m = p.matcher(line);
                     if(m.find()) {
                         String nick = m.group(1);
-                        chatFrame.setNewNick(nick);
+                        users.add(nick);
+                        chatFrame.setNewNick(null, nick);
                     }
                 }
-                
+                else if(line.substring(19).startsWith("Nick changed from:")) {
+                    Pattern p = Pattern.compile("Nick changed from: ([0-9a-zA-Z]+) to: ([0-9a-zA-Z]+)");
+                    Matcher m = p.matcher(line);
+                    if(m.find()) {
+                        String nick = m.group(2);
+                        String oldNick = m.group(1);
+                        users.remove(oldNick);
+                        users.add(nick);
+                        chatFrame.setNewNick(oldNick, nick);
+                        chatFrame.replaceNick(oldNick, nick);
+                    }
+                }
+                else if(line.substring(25).startsWith("Nick changed from:")) {
+                    Pattern p = Pattern.compile("Nick changed from: ([0-9a-zA-Z]+) to: ([0-9a-zA-Z]+)");
+                    Matcher m = p.matcher(line);
+                    if(m.find()) {
+                        String nick = m.group(2);
+                        String oldNick = m.group(1);
+                        users.remove(oldNick);
+                        users.add(nick);
+                        chatFrame.replaceNick(oldNick, nick);
+                    }
+                }
+                else if(line.substring(25).startsWith("Users on channel:")) {
+                    Pattern p = Pattern.compile("Users on channel: (#[0-9a-zA-Z]+) -> \\[([{}, 0-9a-zA-Z]+)\\]");
+                    Matcher m = p.matcher(line);
+                    if(m.find()) {
+                        String usersStr = m.group(2);
+                        String channel = m.group(1);
+                        // TODO: users add remove
+                        parseUserList(usersStr);
+                        chatFrame.getChannel(channel).addNewUsers((String[])users.toArray(new String[]{}));
+                    }
+                }
+
                 String[] parts = line.split(" ");
                 String prefix = parts[0].substring(0, parts[0].length() - 1);
-                chatFrame.getChannel(prefix).addText(line);
+                if(prefix.equals("ServerNotice")) {
+                    //prefix = "Server";
+                }
+                else {
+                    chatFrame.getChannel(prefix).addText(line);
+                }
             }
         }
         catch(Exception e) {
@@ -93,6 +138,16 @@ public class Client extends Thread {
             }
             running = false;
             chatFrame.markDisconnected();
+        }
+    }
+
+    private void parseUserList(String usersStr) {
+        String usersArr[] = usersStr.split(", ");
+        for(String nick : usersArr) {
+            String newNick = nick.substring(1, nick.length() - 1);
+            if(!users.contains(newNick)) {
+                users.add(newNick);
+            }
         }
     }
 

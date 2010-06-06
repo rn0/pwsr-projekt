@@ -4,7 +4,9 @@ import chatServer.Server;
 import chatServer.Session;
 import chatServer.Utils;
 import chatServer.command.BaseCommand;
+import chatServer.message.Broadcast;
 import chatServer.message.Notice;
+import chatServer.message.ServerNotice;
 
 /**
  * User: Piotr Kapera
@@ -20,8 +22,10 @@ public class Nick extends BaseCommand {
             if(server.checkIfNickOccupied(params[1])) {
                 server.send(new Notice(session, "Nick already occupied"));
             } else {
+                // TODO: new servernotice message
+                server.send(new ServerNotice(session, "Nick changed from: " + session.getNick() + " to: " + params[1]));
+                server.send(new Notice(session, "Nick changed from: " + session.getNick() + " to: " + params[1]));
                 session.setNick(params[1]);
-                server.send(new Notice(session, "Nick changed to: " + params[1]));
             }
         }
     }

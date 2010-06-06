@@ -2,7 +2,7 @@ package chatServer;
 
 import chatServer.message.Broadcast;
 import chatServer.message.Message;
-import chatServer.message.Notice;
+import chatServer.message.ServerNotice;
 
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -65,6 +65,16 @@ public final class Server implements Runnable {
     // TODO: implement priv message
     public void send(Message msg) {
         msg.getRecipient().send("Server: " + msg.toString());
+    }
+
+    public void send(ServerNotice msg) {
+        synchronized (sessions) {
+            for (Session session : sessions) {
+                if (!session.equals(msg.getSender())) {
+                    session.send("ServerNotice: " + msg.toString());
+                }
+            }
+        }
     }
 
     /**

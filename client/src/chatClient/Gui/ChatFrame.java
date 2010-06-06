@@ -9,6 +9,7 @@ import chatClient.Client;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.HashMap;
+import java.util.Map;
 import javax.swing.*;
 
 /**
@@ -73,9 +74,15 @@ public class ChatFrame extends JFrame {
         return channels.get(name);
     }
 
-    public void setNewNick(String nick) {
+    public void setNewNick(String old, String nick) {
         nickLabel.setText(nick);
         setTitle("Chat - " + nick);
+    }
+
+    public void replaceNick(String oldNick, String nick) {
+        for(Map.Entry<String, Channel> entry : channels.entrySet()) {
+            entry.getValue().replaceNick(oldNick, nick);
+        }
     }
 
     private void initComponents() {
@@ -179,4 +186,5 @@ public class ChatFrame extends JFrame {
     private JPanel panel3;
     private JTabbedPane tabbedPane1;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
+
 }
