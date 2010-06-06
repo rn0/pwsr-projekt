@@ -3,6 +3,7 @@ package chatServer;
 import chatServer.command.CommandParser;
 import chatServer.message.Broadcast;
 import chatServer.message.Notice;
+import chatServer.message.ServerNotice;
 
 import java.io.*;
 import java.net.Socket;
@@ -91,7 +92,7 @@ public class Session extends Thread {
         } finally {
             // TODO: refactor
             close();
-            server.kill(this);
+            //server.kill(this);
             Utils.log("Połączenie zostało zakończone: " + this);
         }
     }
@@ -99,8 +100,10 @@ public class Session extends Thread {
     public void close() {
         Utils.log("Session close");
         for (Channel channel : channels) {
-            channel.send(new Broadcast(this, "Opuściłem kanał"));
             channel.removeSession(this);
+
+            channel.send(new Broadcast(this, "Opuściłem kanał"));
+            server.send(new ServerNotice(this, "Users on channel: " + channel + " -> " + channel.getSessions().toString()));
             System.out.println("Part: " + channel);
         }
 
@@ -113,10 +116,13 @@ public class Session extends Thread {
         } catch (IOException e) {
             Utils.log(e);
         }
+
+        server.getSessions().remove(this);
     }
 
     public void requestStop() {
-        close();
+        closed = true;
+        //close();
     }
 
     /**

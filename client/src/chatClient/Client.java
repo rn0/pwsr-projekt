@@ -5,6 +5,7 @@ import chatClient.Gui.ChatFrame;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -60,9 +61,9 @@ public class Client extends Thread {
                     if(m.find()) {
                         String channelName = m.group(1);
                         String usersStr = m.group(2);
-                        parseUserList(usersStr);
+                        String[] u = parseUserList(usersStr);
                         Channel chan = new Channel(channelName, this);
-                        chan.addNewUsers((String[])users.toArray(new String[]{}));
+                        chan.addNewUsers(u);
                         chatFrame.registerChannel(chan);
                         System.out.println("new tab! " + channelName);
                     }
@@ -100,14 +101,17 @@ public class Client extends Thread {
                     }
                 }
                 else if(line.substring(25).startsWith("Users on channel:")) {
+                    chatFrame.getChannel("Server").addText(line);
                     Pattern p = Pattern.compile("Users on channel: (#[0-9a-zA-Z]+) -> \\[([{}, 0-9a-zA-Z]+)\\]");
                     Matcher m = p.matcher(line);
                     if(m.find()) {
-                        String usersStr = m.group(2);
                         String channel = m.group(1);
-                        // TODO: users add remove
-                        parseUserList(usersStr);
-                        chatFrame.getChannel(channel).addNewUsers((String[])users.toArray(new String[]{}));
+                        Channel chan = chatFrame.getChannel(channel);
+                        if(chan != null) {
+                            String[] u = parseUserList(m.group(2));
+                            chan.removeAllUsers();
+                            chan.addNewUsers(u);
+                        }
                     }
                 }
 
@@ -141,14 +145,15 @@ public class Client extends Thread {
         }
     }
 
-    private void parseUserList(String usersStr) {
-        String usersArr[] = usersStr.split(", ");
+    private String[] parseUserList(String usersStr) {
+        ArrayList<String> cleanUsers = new ArrayList<String>();
+        String[] usersArr = usersStr.split(", ");
+
         for(String nick : usersArr) {
             String newNick = nick.substring(1, nick.length() - 1);
-            if(!users.contains(newNick)) {
-                users.add(newNick);
-            }
+            cleanUsers.add(newNick);
         }
+        return cleanUsers.toArray(new String[]{});
     }
 
     public int getPort() {

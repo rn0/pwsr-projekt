@@ -6,6 +6,7 @@ import chatServer.Session;
 import chatServer.command.BaseCommand;
 import chatServer.message.Broadcast;
 import chatServer.message.Notice;
+import chatServer.message.ServerNotice;
 
 /**
  * User: Piotr Kapera, Grzegorz Grudzień
@@ -25,6 +26,7 @@ public class Part extends BaseCommand {
                 session.removeChannel(chan);
                 server.send(new Notice(session, "Opuściłeś kanał: " + chan));
                 chan.send(new Broadcast(session, "Opuścił kanał"));
+                server.send(new ServerNotice(session, "Users on channel: " + chan.getName() + " -> " + chan.getSessions().toString()));
             }
         }
     }

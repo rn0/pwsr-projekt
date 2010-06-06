@@ -2,6 +2,7 @@ package chatServer.message;
 
 import chatServer.Channel;
 import chatServer.Session;
+import chatServer.Utils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -32,6 +33,8 @@ public class Message {
         this.to = to;
         this.message = message;
         timestamp = new Date().getTime();
+
+        Utils.log("Constructed message from: " + from + " to: " + "message: " + message);
     }
 
     /**
