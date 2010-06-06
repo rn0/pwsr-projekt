@@ -121,7 +121,5 @@ public class Main extends JDialog {
         portTextField.setEnabled(true);
         buttonConnect.setEnabled(true);
         buttonDisconnect.setEnabled(false);
-
-        this.tabbedPane1.addTab("tab", new Channel());
     }
 }
