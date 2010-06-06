@@ -138,6 +138,9 @@ public final class Server implements Runnable {
     }
 
     public Channel findChannel(String name) {
+        if(!name.startsWith("#")) {
+            return null;
+        }
         for (Channel channel : getChannels()) {
             if (channel.getName().equals(name)) {
                 return channel;

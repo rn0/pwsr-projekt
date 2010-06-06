@@ -16,21 +16,29 @@ public class Join extends BaseCommand {
         if(params.length == 2) {
             Channel channel = server.findChannel(params[1]);
             if(channel == null) {
-                channel = new Channel(params[1]);
-                server.registerChannel(channel);
-                Utils.log("* new channel: " + params[1]);
+                // TODO: refactor. static validators
+                if(params[1].startsWith("#")) {
+                    channel = new Channel(params[1]);
+                    server.registerChannel(channel);
+                    Utils.log("* new channel: " + params[1]);
+                }
+                else {
+                    server.send(new Notice(session, "Invalid channel name"));
+                }
             }
-            channel.addSession(session);
-            session.addChannel(channel);
-            server.send(new Notice(session, "Channel join: " + params[1] + "; Users on channel: " + channel.getSessions().toString()));
+            if(channel != null) {
+                channel.addSession(session);
+                session.addChannel(channel);
+                server.send(new Notice(session, "Channel join: " + params[1] + "; Users on channel: " + channel.getSessions().toString()));
 
-            if(channel.getSessionsCount() == 1) {
-                Utils.log("Channel " + channel + " administrator ID:" + session);
-                server.send(new Notice(session, "jesteś właścicielem kanału!"));
-                session.getModes().get(channel.getName()).add(UserMode.o);
+                if(channel.getSessionsCount() == 1) {
+                    Utils.log("Channel " + channel + " administrator ID:" + session);
+                    server.send(new Notice(session, "jesteś właścicielem kanału!"));
+                    session.getModes().get(channel.getName()).add(UserMode.o);
+                }
+
+                channel.send(new Broadcast(session, "joined channel"));
             }
-            
-            channel.send(new Broadcast(session, "joined channel"));
         }
     }
 
