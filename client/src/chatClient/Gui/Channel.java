@@ -38,12 +38,22 @@ public class Channel extends JPanel {
     }
 
     private void sendButtonActionPerformed(ActionEvent e) {
+        send();
+    }
+
+    private void inputTextFieldKeyPressed(KeyEvent e) {
+        if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+            send();
+        }
+    }
+
+    private void send() {
         String line = inputTextField.getText();
         if(!line.isEmpty()) {
             addText("ME: " + line);
             if(line.startsWith("/")) {
                 System.out.println(line);
-                clientThread.send(line); 
+                clientThread.send(line);
             }
             else {
                String msg;
@@ -54,7 +64,7 @@ public class Channel extends JPanel {
                    msg = "/msg " + channelName + " " + line;
                }
                System.out.println(msg);
-               clientThread.send(msg); 
+               clientThread.send(msg);
             }
             inputTextField.setText("");
         }
@@ -115,6 +125,12 @@ public class Channel extends JPanel {
             //---- inputTextField ----
             inputTextField.setColumns(21);
             inputTextField.setHorizontalAlignment(SwingConstants.LEFT);
+            inputTextField.addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyPressed(KeyEvent e) {
+                    inputTextFieldKeyPressed(e);
+                }
+            });
             panel3.add(inputTextField);
 
             //---- sendButton ----
