@@ -45,16 +45,25 @@ public class Client extends Thread {
                 line = in.readLine();
                 System.out.println(line);
                 
-                if(line.substring(19).startsWith("Channel join: ")) {
-                    Pattern p = Pattern.compile( "(#[0-9a-zA-Z]+)" );
+                if(line.substring(19).startsWith("Channel join:")) {
+                    Pattern p = Pattern.compile("Channel join: (#[0-9a-zA-Z]+)");
                     Matcher m = p.matcher(line);
                     if(m.find()) {
-                        String channelName = m.group(0);
+                        String channelName = m.group(1);
                         //String users = m.group(1);
                         chatFrame.registerNewChannel(new Channel(channelName, this));
                         System.out.println("new tab! " + channelName);
                     }
                 }
+                else if(line.substring(19).startsWith("Nick changed to:")) {
+                    Pattern p = Pattern.compile("Nick changed to: ([0-9a-zA-Z]+)");
+                    Matcher m = p.matcher(line);
+                    if(m.find()) {
+                        String nick = m.group(1);
+                        chatFrame.setNewNick(nick);
+                    }
+                }
+                
                 String[] parts = line.split(" ");
                 String prefix = parts[0].substring(0, parts[0].length() - 1);
                 chatFrame.getChannel(prefix).addText(line);

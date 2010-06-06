@@ -59,6 +59,10 @@ public class ChatFrame extends JFrame {
         return channels.get(name);
     }
 
+    public void setNewNick(String nick) {
+        nickLabel.setText(nick);
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner Evaluation license - Piotr Kapera
