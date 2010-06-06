@@ -25,7 +25,7 @@ public class Session extends Thread {
     private Server server;
     private long id;
     private String nick = "";
-    private boolean closed = false;
+    private volatile boolean closed = false;
     /* TODO: EnumSet is not synchronized.
        If multiple threads access an enum set concurrently,
        and at least one of the threads modifies the set,
@@ -104,6 +104,8 @@ public class Session extends Thread {
             channel.removeSession(this);
             System.out.println("Part: " + channel);
         }
+
+        closed = true;
         
         out.close();
         try {
@@ -112,6 +114,10 @@ public class Session extends Thread {
         } catch (IOException e) {
             Utils.log(e);
         }
+    }
+
+    public void requestStop() {
+        closed = true;
     }
 
     /**

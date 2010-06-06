@@ -22,6 +22,8 @@ public class Client extends Thread {
     private String ip;
     private int port;
 
+    private volatile boolean running = false;
+
     public Client(ChatFrame chatFrame) throws Exception {
         this.chatFrame = chatFrame;
         System.out.println("construct Client thread");
@@ -40,9 +42,14 @@ public class Client extends Thread {
 
             String line = null;
             chatFrame.markConnected();
+            running = true;            
             
-            while(true) {
+            while(running) {
                 line = in.readLine();
+                if(line == null || line.isEmpty()) {
+                    running = false;
+                    return;
+                }
                 System.out.println(line);
                 
                 if(line.substring(19).startsWith("Channel join:")) {
@@ -51,7 +58,7 @@ public class Client extends Thread {
                     if(m.find()) {
                         String channelName = m.group(1);
                         //String users = m.group(1);
-                        chatFrame.registerNewChannel(new Channel(channelName, this));
+                        chatFrame.registerChannel(new Channel(channelName, this));
                         System.out.println("new tab! " + channelName);
                     }
                 }
@@ -70,7 +77,7 @@ public class Client extends Thread {
             }
         }
         catch(Exception e) {
-            chatFrame.getChannel("Server").addText(e.toString());
+            chatFrame.getChannel("Server").addText(e.getMessage());
         }
         finally {
             try {
@@ -82,8 +89,9 @@ public class Client extends Thread {
                     socket.close();
             }
             catch (IOException e) {
-                chatFrame.getChannel("Server").addText(e.toString());
+                chatFrame.getChannel("Server").addText(e.getMessage());
             }
+            running = false;
             chatFrame.markDisconnected();
         }
     }
@@ -108,5 +116,13 @@ public class Client extends Thread {
         if(!text.isEmpty()) {
             out.println(text);
         }
+    }
+
+    public void requestClose() {
+        send("/exit");
+    }
+
+    public boolean isRunning() {
+        return running;
     }
 }

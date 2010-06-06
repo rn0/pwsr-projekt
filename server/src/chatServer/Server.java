@@ -88,7 +88,7 @@ public final class Server implements Runnable {
     public void kill(Session session) {
         Utils.log("Killed: " + session);
         //session.close();
-        
+        session.requestStop();
         sessions.remove(session);
     }
 

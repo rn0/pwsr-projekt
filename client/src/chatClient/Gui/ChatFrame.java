@@ -17,25 +17,38 @@ import javax.swing.*;
 public class ChatFrame extends JFrame {
     private Client clientThread;
     private HashMap<String, Channel> channels = new HashMap<String, Channel>();
+    private boolean isRunning = false;
 
     public ChatFrame() {
         initComponents();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        try {
-            clientThread = new Client(this);
-            Channel serverChannel = new Channel("Server", clientThread);
-            registerNewChannel(serverChannel);
-        }
-        catch(Exception e) {
-            channels.get("Server").addText(e.toString());
-        }
     }
 
     private void connectDisconnectButtonActionPerformed(ActionEvent e) {
-        clientThread.setIp(ipAddressTextField.getText());
-        clientThread.setPort(Integer.parseInt(portTextField.getText()));
-        clientThread.start();
+        if(isRunning) {
+            clientThread.requestClose();
+            isRunning = false;
+
+                nickLabel.setText("---");
+                setTitle("Chat");
+        }
+        else {
+            try {
+                clientThread = new Client(this);
+                clientThread.setIp(ipAddressTextField.getText());
+                clientThread.setPort(Integer.parseInt(portTextField.getText()));
+
+                tabbedPane1.removeAll();
+                Channel serverChannel = new Channel("Server", clientThread);
+                registerChannel(serverChannel);
+
+                clientThread.start();
+                isRunning = true;
+            }
+            catch(Exception ex) {
+                channels.get("Server").addText(ex.toString());
+            }
+        }
     }
 
     public void markConnected() {
@@ -50,7 +63,7 @@ public class ChatFrame extends JFrame {
         connectDisconnectButton.setText("Połącz");
     }
 
-    public void registerNewChannel(Channel tab) {
+    public void registerChannel(Channel tab) {
         tabbedPane1.addTab(tab.getName(), tab);
         channels.put(tab.getName(), tab);
     }
