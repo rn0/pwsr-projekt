@@ -61,6 +61,7 @@ public class ChatFrame extends JFrame {
 
     public void setNewNick(String nick) {
         nickLabel.setText(nick);
+        setTitle("Chat - " + nick);
     }
 
     private void initComponents() {
