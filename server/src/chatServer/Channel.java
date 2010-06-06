@@ -89,6 +89,10 @@ public class Channel {
         }
     }
 
+    public void send(Notice msg) {
+        msg.getRecipient().send(getName() + ": " + msg.toString());
+    }
+
     /**
      * @return a string representation of the object.
      */
