@@ -64,7 +64,7 @@ public final class Server implements Runnable {
 
     // TODO: implement priv message
     public void send(Message msg) {
-        msg.getRecipient().send(msg.toString());
+        msg.getRecipient().send("Server: " + msg.toString());
     }
 
     /**

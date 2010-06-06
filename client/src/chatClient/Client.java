@@ -45,7 +45,7 @@ public class Client extends Thread {
             
             while(true) {
                 line = in.readLine();
-                if(line.substring(11).startsWith("Channel join: ")) {
+                if(line.substring(19).startsWith("Channel join: ")) {
                     Pattern p = Pattern.compile( "(#[0-9a-zA-Z]+)" );
                     Matcher m = p.matcher(line);
                     if(m.find()) {

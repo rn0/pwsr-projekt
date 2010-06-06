@@ -82,7 +82,7 @@ public class Channel {
         synchronized (sessions) {
             for (Session session : sessions) {
                 if (!session.equals(msg.getSender())) {
-                    session.send(msg.toString());
+                    session.send(getName() + ": " + msg.toString());
                 }
             }
         }
