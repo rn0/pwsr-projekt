@@ -8,7 +8,7 @@ import java.util.EnumSet;
 import java.util.Vector;
 
 /**
- * User: Piotr Kapera
+ * User: Piotr Kapera, Grzegorz Grudzień
  * Date: 2010-06-02
  * Time: 21:26:57
  */

@@ -1,7 +1,7 @@
 import chatServer.Server;
 
 /**
- * User: Piotr Kapera
+ * User: Piotr Kapera, Grzegorz Grudzień
  * Date: 2010-05-10
  * Time: 19:29:44
  */

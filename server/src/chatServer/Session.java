@@ -11,7 +11,7 @@ import java.util.*;
 import static java.util.EnumSet.of;
 
 /**
- * User: Piotr Kapera
+ * User: Piotr Kapera, Grzegorz Grudzień
  * Date: 2010-05-10
  * Time: 19:42:14
  */

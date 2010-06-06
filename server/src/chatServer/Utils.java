@@ -4,7 +4,7 @@ import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 
 /**
- * User: Piotr Kapera
+ * User: Piotr Kapera, Grzegorz Grudzień
  * Date: 2010-05-10
  * Time: 22:54:27
  */

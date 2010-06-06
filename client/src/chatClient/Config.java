@@ -3,7 +3,7 @@ package chatClient;
 import java.util.HashMap;
 
 /**
- * User: Piotr Kapera
+ * User: Piotr Kapera, Grzegorz Grudzień
  * Date: 2010-06-05
  * Time: 20:01:55
  */

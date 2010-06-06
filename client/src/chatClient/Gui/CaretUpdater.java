@@ -10,7 +10,7 @@ import javax.swing.text.Highlighter;
 import java.awt.*;
 
 /**
- * User: Piotr Kapera
+ * User: Piotr Kapera, Grzegorz Grudzień
  * Date: 2010-06-05
  * Time: 23:00:23
  */

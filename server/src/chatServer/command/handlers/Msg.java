@@ -10,7 +10,7 @@ import chatServer.message.Message;
 import chatServer.message.Notice;
 
 /**
- * User: Piotr Kapera
+ * User: Piotr Kapera, Grzegorz Grudzień
  * Date: 2010-05-16
  * Time: 12:41:59
  */

@@ -9,7 +9,7 @@ import chatServer.message.Notice;
 import java.util.Vector;
 
 /**
- * User: Piotr Kapera
+ * User: Piotr Kapera, Grzegorz Grudzień
  * Date: 2010-05-17
  * Time: 20:11:59
  */

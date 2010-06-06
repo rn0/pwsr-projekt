@@ -8,7 +8,7 @@ import chatServer.message.Notice;
 import java.util.EnumSet;
 
 /**
- * User: Piotr Kapera
+ * User: Piotr Kapera, Grzegorz Grudzień
  * Date: 2010-05-30
  * Time: 18:23:04
  */

@@ -3,7 +3,7 @@ package chatServer.message;
 import chatServer.Session;
 
 /**
- * User: Piotr Kapera
+ * User: Piotr Kapera, Grzegorz Grudzień
  * Date: 2010-06-06
  * Time: 20:46:01
  */

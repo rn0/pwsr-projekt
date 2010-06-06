@@ -8,7 +8,7 @@ import java.lang.reflect.Constructor;
 import java.util.HashMap;
 
 /**
- * User: Piotr Kapera
+ * User: Piotr Kapera, Grzegorz Grudzień
  * Date: 2010-05-16
  * Time: 12:54:37
  */

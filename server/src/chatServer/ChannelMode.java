@@ -1,7 +1,7 @@
 package chatServer;
 
 /**
- * User: Piotr Kapera
+ * User: Piotr Kapera, Grzegorz Grudzień
  * Date: 2010-06-02
  * Time: 20:59:46
  */

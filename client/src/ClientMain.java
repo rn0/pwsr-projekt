@@ -3,7 +3,7 @@ import chatClient.Gui.ChatFrame;
 import javax.swing.*;
 
 /**
- * User: Piotr Kapera
+ * User: Piotr Kapera, Grzegorz Grudzień
  * Date: 2010-05-10
  * Time: 19:32:17
  */

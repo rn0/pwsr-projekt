@@ -7,7 +7,7 @@ import chatServer.Utils;
 import chatServer.command.BaseCommand;
 
 /**
- * User: Piotr Kapera
+ * User: Piotr Kapera, Grzegorz Grudzień
  * Date: 2010-06-02
  * Time: 21:16:40
  */
