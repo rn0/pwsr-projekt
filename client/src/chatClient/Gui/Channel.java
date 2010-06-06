@@ -8,6 +8,8 @@ import chatClient.Client;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.text.DefaultStyledDocument;
@@ -22,6 +24,7 @@ public class Channel extends JPanel {
     private final DefaultStyledDocument doc;
     private StyleContext sc;
     private Client clientThread;
+    private SimpleDateFormat timestampFormater = new SimpleDateFormat("HH:mm:ss");
     
     public Channel(String channelName, Client client) {
         initComponents();
@@ -50,7 +53,7 @@ public class Channel extends JPanel {
     private void send() {
         String line = inputTextField.getText();
         if(!line.isEmpty()) {
-            addText("ME: " + line);
+            addText("ME: <" + timestampFormater.format(new Date()) + "> " + line);
             if(line.startsWith("/")) {
                 System.out.println(line);
                 clientThread.send(line);
