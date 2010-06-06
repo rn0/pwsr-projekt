@@ -1,8 +1,6 @@
 package chatServer.command.handlers;
 
-import chatServer.Server;
-import chatServer.Session;
-import chatServer.UserMode;
+import chatServer.*;
 import chatServer.command.BaseCommand;
 import chatServer.message.Broadcast;
 import chatServer.message.Notice;
@@ -15,24 +13,40 @@ import chatServer.message.Notice;
 public class Kick extends BaseCommand {
     @Override
     public void execute(Server server, Session session, String[] params) {
-        if(session.getModes().contains(UserMode.o)) {
-            Session to = server.findSession(params[1]);
-            if(to == null) {
-                server.send(new Notice(session, "Unknown recipient"));
+        Utils.log("* kick command");
+        if(params.length == 2) {
+            // kick user :)
+            if(session.getModes().contains(UserMode.o)) {
+                Session sessionToBan = server.findSession(params[1]);
+                if(sessionToBan == null) {
+                    server.send(new Notice(sessionToBan, "Unknown recipient"));
+                } else {
+                    server.send(new Notice(sessionToBan, "Zostałeś wykopany z serwera! :D"));
+                    server.kill(sessionToBan);
+                }
             } else {
-                server.send(new Notice(to, "Zostałeś wykopany z kanału! :D"));
-                //server.send(new Broadcast(to, "Zostałem wykopany z kanału!"));
-                server.kill(to);
+                server.send(new Notice(session, "Brak wystarczajacych uprawnien"));
             }
         }
-        else {
-            server.send(new Notice(session, "Brak wystarczajacych uprawnien"));
+        else if(params.length == 3) {
+            // kick usera z kanału
+            Channel chan = server.findChannel(params[1]);
+            if(chan == null) {
+                server.send(new Notice(session, "Unknown channel"));
+            } else {
+                Session sessionToBan = server.findSession(params[2]);
+                if(sessionToBan == null) {
+                    server.send(new Notice(session, "Unknown recipient"));
+                } else {
+                    chan.removeSession(sessionToBan);
+                    server.send(new Notice(sessionToBan, "Zostałeś wykopany z kanału! :D"));
+                }
+            }
         }
-
     }
 
     @Override
     public String getUsage() {
-        return "/kick <nick>";
+        return "/kick <?channel> <nick>";
     }
 }

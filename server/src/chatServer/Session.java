@@ -117,7 +117,7 @@ public class Session extends Thread {
     }
 
     public void requestStop() {
-        closed = true;
+        close();
     }
 
     /**

@@ -27,10 +27,7 @@ public class ChatFrame extends JFrame {
     private void connectDisconnectButtonActionPerformed(ActionEvent e) {
         if(isRunning) {
             clientThread.requestClose();
-            isRunning = false;
-
-                nickLabel.setText("---");
-                setTitle("Chat");
+            markDisconnected();
         }
         else {
             try {
@@ -55,12 +52,16 @@ public class ChatFrame extends JFrame {
         ipAddressTextField.setEnabled(false);
         portTextField.setEnabled(false);
         connectDisconnectButton.setText("Rozłącz");
+        isRunning = true;
     }
 
     public void markDisconnected() {
         ipAddressTextField.setEnabled(true);
         portTextField.setEnabled(true);
         connectDisconnectButton.setText("Połącz");
+        isRunning = false;
+        nickLabel.setText("---");
+        setTitle("Chat");
     }
 
     public void registerChannel(Channel tab) {
