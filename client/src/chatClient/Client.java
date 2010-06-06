@@ -2,6 +2,7 @@ package chatClient;
 
 import chatClient.Gui.Channel;
 import chatClient.Gui.ChatFrame;
+import chatClient.Gui.TextStyle;
 
 import java.io.*;
 import java.net.Socket;
@@ -101,7 +102,7 @@ public class Client extends Thread {
                     }
                 }
                 else if(line.substring(25).startsWith("Users on channel:")) {
-                    chatFrame.getChannel("Server").addText(line);
+                    chatFrame.getChannel("Server").addText(line, TextStyle.ServerNotice);
                     Pattern p = Pattern.compile("Users on channel: (#[0-9a-zA-Z]+) -> \\[([{}, 0-9a-zA-Z]+)\\]");
                     Matcher m = p.matcher(line);
                     if(m.find()) {
@@ -120,13 +121,16 @@ public class Client extends Thread {
                 if(prefix.equals("ServerNotice")) {
                     //prefix = "Server";
                 }
+                else if(prefix.equals("Server")) {
+                    chatFrame.getChannel(prefix).addText(line, TextStyle.Server);
+                }
                 else {
                     chatFrame.getChannel(prefix).addText(line);
                 }
             }
         }
         catch(Exception e) {
-            chatFrame.getChannel("Server").addText(e.getMessage());
+            chatFrame.getChannel("Server").addText(e.getMessage(), TextStyle.Exception);
         }
         finally {
             try {

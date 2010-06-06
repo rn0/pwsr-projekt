@@ -13,6 +13,8 @@ import java.util.Date;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 
 /**
@@ -40,6 +42,26 @@ public class Channel extends JPanel {
         sc = new StyleContext();
         doc = new DefaultStyledDocument(sc);
         textPane1.setDocument(doc);
+
+        createStyles();
+    }
+
+    private void createStyles() {
+        Style style = textPane1.addStyle("Default", null);
+
+        Style style1 = textPane1.addStyle("Exception", null);
+        StyleConstants.setBold(style1, true);
+        StyleConstants.setForeground(style1, Color.RED);
+
+        Style style2 = textPane1.addStyle("ServerNotice", null);
+        StyleConstants.setItalic(style2, true);
+        StyleConstants.setForeground(style2, Color.GRAY);
+
+        Style style3 = textPane1.addStyle("Server", null);
+        StyleConstants.setItalic(style2, true);
+
+        Style style4 = textPane1.addStyle("ME", null);
+        StyleConstants.setBold(style4, true);
     }
 
     private void sendButtonActionPerformed(ActionEvent e) {
@@ -55,7 +77,7 @@ public class Channel extends JPanel {
     private void send() {
         String line = inputTextField.getText();
         if(!line.isEmpty()) {
-            addText("ME: <" + timestampFormater.format(new Date()) + "> " + line);
+            addText("ME: <" + timestampFormater.format(new Date()) + "> " + line, TextStyle.ME);
             if(line.startsWith("/")) {
                 System.out.println(line);
                 clientThread.send(line);
@@ -74,15 +96,29 @@ public class Channel extends JPanel {
             inputTextField.setText("");
         }
     }
-
-    public void addText(final String text) {
+    public void addText(final String text, final TextStyle style) {
         try {
             if (SwingUtilities.isEventDispatchThread()) {
-                insertText(text);
+                insertText(text, style);
             } else {
                 SwingUtilities.invokeAndWait(new Runnable() {
                     public void run() {
-                        insertText(text);
+                        insertText(text, style);
+                    }
+                });
+            }
+        } catch (Exception e) {
+
+        }
+    }
+    public void addText(final String text) {
+        try {
+            if (SwingUtilities.isEventDispatchThread()) {
+                insertText(text, TextStyle.Default);
+            } else {
+                SwingUtilities.invokeAndWait(new Runnable() {
+                    public void run() {
+                        insertText(text, TextStyle.Default);
                     }
                 });
             }
@@ -104,9 +140,28 @@ public class Channel extends JPanel {
         users.removeAllElements();
     }
 
-    private void insertText(String text) {
+    private void insertText(String text, TextStyle style) {
         try {
-            doc.insertString(doc.getLength(), text + "\n", null);
+            Style textPaneStyle;
+            switch(style) {
+                default:
+                case Default:
+                    textPaneStyle = textPane1.getStyle("Default");
+                    break;
+                case Exception:
+                    textPaneStyle = textPane1.getStyle("Exception");
+                    break;
+                case ServerNotice:
+                    textPaneStyle = textPane1.getStyle("ServerNotice");
+                    break;
+                case Server:
+                    textPaneStyle = textPane1.getStyle("Server");
+                    break;
+                case ME:
+                    textPaneStyle = textPane1.getStyle("ME");
+                    break;
+            }
+            doc.insertString(doc.getLength(), text + "\n", textPaneStyle);
         } catch (Exception e) {
             e.printStackTrace();
         }
