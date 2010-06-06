@@ -103,17 +103,13 @@ public class Channel extends JPanel {
         splitPane1 = new JSplitPane();
         scrollPane2 = new JScrollPane();
         textPane1 = new JTextPane();
+        panel1 = new JPanel();
+        label1 = new JLabel();
         scrollPane1 = new JScrollPane();
         list1 = new JList();
 
         //======== this ========
-
-        // JFormDesigner evaluation mark
-        setBorder(new javax.swing.border.CompoundBorder(
-            new javax.swing.border.TitledBorder(new javax.swing.border.EmptyBorder(0, 0, 0, 0),
-                "JFormDesigner Evaluation", javax.swing.border.TitledBorder.CENTER,
-                javax.swing.border.TitledBorder.BOTTOM, new java.awt.Font("Dialog", java.awt.Font.BOLD, 12),
-                java.awt.Color.red), getBorder())); addPropertyChangeListener(new java.beans.PropertyChangeListener(){public void propertyChange(java.beans.PropertyChangeEvent e){if("border".equals(e.getPropertyName()))throw new RuntimeException();}});
+        setBackground(Color.white);
 
         setLayout(new BorderLayout());
 
@@ -125,6 +121,7 @@ public class Channel extends JPanel {
             //---- inputTextField ----
             inputTextField.setColumns(21);
             inputTextField.setHorizontalAlignment(SwingConstants.LEFT);
+            inputTextField.setBorder(new EtchedBorder());
             inputTextField.addKeyListener(new KeyAdapter() {
                 @Override
                 public void keyPressed(KeyEvent e) {
@@ -148,6 +145,7 @@ public class Channel extends JPanel {
         //======== splitPane1 ========
         {
             splitPane1.setResizeWeight(0.7);
+            splitPane1.setBorder(new EtchedBorder());
 
             //======== scrollPane2 ========
             {
@@ -160,16 +158,28 @@ public class Channel extends JPanel {
             }
             splitPane1.setLeftComponent(scrollPane2);
 
-            //======== scrollPane1 ========
+            //======== panel1 ========
             {
-                scrollPane1.setPreferredSize(new Dimension(100, 130));
-                scrollPane1.setBorder(null);
+                panel1.setBackground(Color.white);
+                panel1.setLayout(new BorderLayout());
 
-                //---- list1 ----
-                list1.setBorder(null);
-                scrollPane1.setViewportView(list1);
+                //---- label1 ----
+                label1.setText("U\u017cytkownicy:");
+                label1.setHorizontalAlignment(SwingConstants.CENTER);
+                panel1.add(label1, BorderLayout.NORTH);
+
+                //======== scrollPane1 ========
+                {
+                    scrollPane1.setPreferredSize(new Dimension(100, 130));
+                    scrollPane1.setBorder(null);
+
+                    //---- list1 ----
+                    list1.setBorder(null);
+                    scrollPane1.setViewportView(list1);
+                }
+                panel1.add(scrollPane1, BorderLayout.CENTER);
             }
-            splitPane1.setRightComponent(scrollPane1);
+            splitPane1.setRightComponent(panel1);
         }
         add(splitPane1, BorderLayout.CENTER);
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
@@ -183,6 +193,8 @@ public class Channel extends JPanel {
     private JSplitPane splitPane1;
     private JScrollPane scrollPane2;
     private JTextPane textPane1;
+    private JPanel panel1;
+    private JLabel label1;
     private JScrollPane scrollPane1;
     private JList list1;
     // JFormDesigner - End of variables declaration  //GEN-END:variables

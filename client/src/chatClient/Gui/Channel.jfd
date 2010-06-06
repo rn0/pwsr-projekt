@@ -12,6 +12,15 @@
       <object class="com.jformdesigner.model.FormLayoutManager"> 
        <class>java.awt.BorderLayout</class> 
       </object> 
+      <void method="setProperty"> 
+       <string>background</string> 
+       <object class="java.awt.Color"> 
+        <int>255</int> 
+        <int>255</int> 
+        <int>255</int> 
+        <int>255</int> 
+       </object> 
+      </void> 
       <void property="name"> 
        <string>this</string> 
       </void> 
@@ -43,6 +52,14 @@
           <void method="setProperty"> 
            <string>horizontalAlignment</string> 
            <int>2</int> 
+          </void> 
+          <void method="setProperty"> 
+           <string>border</string> 
+           <object id="EtchedBorder0" class="javax.swing.border.EtchedBorder"> 
+            <int>1</int> 
+            <null/> 
+            <null/> 
+           </object> 
           </void> 
           <void property="name"> 
            <string>inputTextField</string> 
@@ -96,6 +113,10 @@
          <string>resizeWeight</string> 
          <double>0.7</double> 
         </void> 
+        <void method="setProperty"> 
+         <string>border</string> 
+         <object idref="EtchedBorder0"/> 
+        </void> 
         <void property="name"> 
          <string>splitPane1</string> 
         </void> 
@@ -142,33 +163,83 @@
         </void> 
         <void method="add"> 
          <object class="com.jformdesigner.model.FormContainer"> 
-          <string>javax.swing.JScrollPane</string> 
+          <string>javax.swing.JPanel</string> 
           <object class="com.jformdesigner.model.FormLayoutManager"> 
-           <class>javax.swing.JScrollPane</class> 
+           <class>java.awt.BorderLayout</class> 
           </object> 
           <void method="setProperty"> 
-           <string>preferredSize</string> 
-           <object class="java.awt.Dimension"> 
-            <int>100</int> 
-            <int>130</int> 
+           <string>background</string> 
+           <object class="java.awt.Color"> 
+            <int>255</int> 
+            <int>255</int> 
+            <int>255</int> 
+            <int>255</int> 
            </object> 
           </void> 
-          <void method="setProperty"> 
-           <string>border</string> 
-           <object class="com.jformdesigner.model.FormObject" field="NULL_VALUE"/> 
-          </void> 
           <void property="name"> 
-           <string>scrollPane1</string> 
+           <string>panel1</string> 
           </void> 
           <void method="add"> 
            <object class="com.jformdesigner.model.FormComponent"> 
-            <string>javax.swing.JList</string> 
+            <string>javax.swing.JLabel</string> 
+            <void method="setProperty"> 
+             <string>text</string> 
+             <string>Użytkownicy:</string> 
+            </void> 
+            <void method="setProperty"> 
+             <string>horizontalAlignment</string> 
+             <int>0</int> 
+            </void> 
+            <void property="name"> 
+             <string>label1</string> 
+            </void> 
+           </object> 
+           <object class="com.jformdesigner.model.FormLayoutConstraints"> 
+            <class>java.lang.String</class> 
+            <void method="setProperty"> 
+             <string>value</string> 
+             <string>North</string> 
+            </void> 
+           </object> 
+          </void> 
+          <void method="add"> 
+           <object class="com.jformdesigner.model.FormContainer"> 
+            <string>javax.swing.JScrollPane</string> 
+            <object class="com.jformdesigner.model.FormLayoutManager"> 
+             <class>javax.swing.JScrollPane</class> 
+            </object> 
+            <void method="setProperty"> 
+             <string>preferredSize</string> 
+             <object class="java.awt.Dimension"> 
+              <int>100</int> 
+              <int>130</int> 
+             </object> 
+            </void> 
             <void method="setProperty"> 
              <string>border</string> 
              <object class="com.jformdesigner.model.FormObject" field="NULL_VALUE"/> 
             </void> 
             <void property="name"> 
-             <string>list1</string> 
+             <string>scrollPane1</string> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormComponent"> 
+              <string>javax.swing.JList</string> 
+              <void method="setProperty"> 
+               <string>border</string> 
+               <object class="com.jformdesigner.model.FormObject" field="NULL_VALUE"/> 
+              </void> 
+              <void property="name"> 
+               <string>list1</string> 
+              </void> 
+             </object> 
+            </void> 
+           </object> 
+           <object class="com.jformdesigner.model.FormLayoutConstraints"> 
+            <class>java.lang.String</class> 
+            <void method="setProperty"> 
+             <string>value</string> 
+             <string>Center</string> 
             </void> 
            </object> 
           </void> 

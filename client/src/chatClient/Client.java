@@ -1,7 +1,7 @@
 package chatClient;
 
 import chatClient.Gui.Channel;
-import chatClient.Gui.Main;
+import chatClient.Gui.ChatFrame;
 
 import java.io.*;
 import java.net.Socket;
@@ -17,13 +17,13 @@ public class Client extends Thread {
     private BufferedReader in;
     private PrintWriter out;
     private Socket socket;
-    private final Main main;
+    private final ChatFrame chatFrame;
 
     private String ip;
     private int port;
 
-    public Client(Main main) throws Exception {
-        this.main = main;
+    public Client(ChatFrame chatFrame) throws Exception {
+        this.chatFrame = chatFrame;
         System.out.println("construct Client thread");
     }
 
@@ -39,7 +39,7 @@ public class Client extends Thread {
             out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
 
             String line = null;
-            main.markConnected();
+            chatFrame.markConnected();
             
             while(true) {
                 line = in.readLine();
@@ -51,17 +51,17 @@ public class Client extends Thread {
                     if(m.find()) {
                         String channelName = m.group(0);
                         //String users = m.group(1);
-                        main.registerNewChannel(new Channel(channelName, this));
+                        chatFrame.registerNewChannel(new Channel(channelName, this));
                         System.out.println("new tab! " + channelName);
                     }
                 }
                 String[] parts = line.split(" ");
                 String prefix = parts[0].substring(0, parts[0].length() - 1);
-                main.getChannel(prefix).addText(line);
+                chatFrame.getChannel(prefix).addText(line);
             }
         }
         catch(Exception e) {
-            main.getChannel("Server").addText(e.toString());
+            chatFrame.getChannel("Server").addText(e.toString());
         }
         finally {
             try {
@@ -73,9 +73,9 @@ public class Client extends Thread {
                     socket.close();
             }
             catch (IOException e) {
-                main.getChannel("Server").addText(e.toString());
+                chatFrame.getChannel("Server").addText(e.toString());
             }
-            main.markDisconnected();
+            chatFrame.markDisconnected();
         }
     }
 
