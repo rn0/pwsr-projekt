@@ -122,4 +122,8 @@ public class Main extends JDialog {
         buttonConnect.setEnabled(true);
         buttonDisconnect.setEnabled(false);
     }
+
+    public void addNewTab(JPanel tab) {
+        tabbedPane1.addTab("test", tab);
+    }
 }

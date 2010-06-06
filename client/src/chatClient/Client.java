@@ -1,9 +1,12 @@
 package chatClient;
 
+import chatClient.Gui.Channel;
 import chatClient.Gui.Main;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * User: Piotr Kapera
@@ -43,7 +46,14 @@ public class Client extends Thread {
             while(true) {
                 line = in.readLine();
                 if(line.substring(11).startsWith("Channel join: ")) {
-                    System.out.println("new tab!");
+                    Pattern p = Pattern.compile( "(#[0-9a-zA-Z]+)" );
+                    Matcher m = p.matcher(line);
+                    if(m.find()) {
+                        String channelName = m.group(0);
+                        //String users = m.group(1);
+                        this.main.addNewTab(new Channel(channelName, this));
+                        System.out.println("new tab! " + channelName);
+                    }
                 }
                 System.out.println(line);
                 this.main.addText(line);
