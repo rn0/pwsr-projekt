@@ -9,45 +9,32 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.awt.event.*;
+import java.nio.channels.Channels;
+import java.util.HashMap;
 
 public class Main extends JDialog {
     private JPanel contentPane;
-    private JButton sendButton;
     private JTabbedPane tabbedPane1;
-    private JTextField inputField;
-    private JTextPane textPane1;
     private JTextField ipAddressTextField;
     private JTextField portTextField;
     private JButton buttonConnect;
     private JButton buttonDisconnect;
 
-    private final DefaultStyledDocument doc;
-    private StyleContext sc;
     private Client clientThread;
+    private HashMap<String, Channel> channels = new HashMap<String, Channel>();
 
     public Main() {
         setContentPane(contentPane);
         setModal(true);
-        getRootPane().setDefaultButton(sendButton);
-
-        sc = new StyleContext();
-        doc = new DefaultStyledDocument(sc);
-        textPane1.setDocument(doc);
-        textPane1.addCaretListener(new CaretUpdater());
 
         try {
             clientThread = new Client(this);
+            Channel serverChannel = new Channel("Server", clientThread);
+            registerNewChannel(serverChannel);
         }
         catch(Exception e) {
-            addText(e.toString());
+            channels.get("Server").addText(e.toString());
         }
-
-        sendButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                clientThread.send(inputField.getText());
-                inputField.setText("");
-            }
-        });
 
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
@@ -67,7 +54,6 @@ public class Main extends JDialog {
                 clientThread.setIp(ipAddressTextField.getText());
                 clientThread.setPort(Integer.parseInt(portTextField.getText()));
                 clientThread.start();
-                System.out.println("After Client thread");
             }
         });
         buttonDisconnect.addActionListener(new ActionListener() {
@@ -85,30 +71,6 @@ public class Main extends JDialog {
         dispose();
     }
 
-    public void addText(final String text) {
-        try {
-            if (SwingUtilities.isEventDispatchThread()) {
-                insertText(text);
-            } else {
-                SwingUtilities.invokeAndWait(new Runnable() {
-                    public void run() {
-                        insertText(text);
-                    }
-                });
-            }
-        } catch (Exception e) {
-
-        }
-    }
-
-    private void insertText(String text) {
-        try {
-            doc.insertString(doc.getLength(), text + "\n", null);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public void markConnected() {
         ipAddressTextField.setEnabled(false);
         portTextField.setEnabled(false);
@@ -123,7 +85,12 @@ public class Main extends JDialog {
         buttonDisconnect.setEnabled(false);
     }
 
-    public void addNewTab(JPanel tab) {
-        tabbedPane1.addTab("test", tab);
+    public void registerNewChannel(Channel tab) {
+        tabbedPane1.addTab(tab.getName(), tab);
+        channels.put(tab.getName(), tab);
+    }
+
+    public Channel getChannel(String name) {
+        return channels.get(name);
     }
 }

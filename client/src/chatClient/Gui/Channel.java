@@ -10,34 +10,77 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.StyleContext;
 
 /**
  * @author unknown
  */
 public class Channel extends JPanel {
-    private Client client;
     private String channelName;
+
+    private final DefaultStyledDocument doc;
+    private StyleContext sc;
+    private Client clientThread;
     
     public Channel(String channelName, Client client) {
         initComponents();
 
-        this.client = client;
+        this.clientThread = client;
         this.channelName = channelName;
         
         setName(channelName);
+        //getRootPane().setDefaultButton(sendButton);
+
+        sc = new StyleContext();
+        doc = new DefaultStyledDocument(sc);
+        textPane1.setDocument(doc);
     }
 
     private void sendButtonActionPerformed(ActionEvent e) {
         String line = inputTextField.getText();
         if(!line.isEmpty()) {
+            addText("ME: " + line);
             if(line.startsWith("/")) {
-                
+                System.out.println(line);
+                clientThread.send(line); 
             }
             else {
-               String msg = "/msg " + channelName + " " + line;
+               String msg;
+               if(channelName.equals("server")) {
+                   msg = "/msg " + line;
+               }
+               else {
+                   msg = "/msg " + channelName + " " + line;
+               }
                System.out.println(msg);
-               client.send(msg); 
+               clientThread.send(msg); 
             }
+            inputTextField.setText("");
+        }
+    }
+
+    public void addText(final String text) {
+        try {
+            if (SwingUtilities.isEventDispatchThread()) {
+                insertText(text);
+            } else {
+                SwingUtilities.invokeAndWait(new Runnable() {
+                    public void run() {
+                        insertText(text);
+                    }
+                });
+            }
+        } catch (Exception e) {
+
+        }
+    }
+
+    private void insertText(String text) {
+        try {
+            doc.insertString(doc.getLength(), text + "\n", null);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

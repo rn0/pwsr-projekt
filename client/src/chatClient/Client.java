@@ -31,7 +31,6 @@ public class Client extends Thread {
     public void run() {
         System.out.println("run Client thread");
         try {
-         
             if(ip.isEmpty()) {
                 throw new Exception("Invalid ip");
             }
@@ -40,27 +39,29 @@ public class Client extends Thread {
             out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
 
             String line = null;
-
-            this.main.markConnected();
+            main.markConnected();
             
             while(true) {
                 line = in.readLine();
+                System.out.println(line);
+                
                 if(line.substring(19).startsWith("Channel join: ")) {
                     Pattern p = Pattern.compile( "(#[0-9a-zA-Z]+)" );
                     Matcher m = p.matcher(line);
                     if(m.find()) {
                         String channelName = m.group(0);
                         //String users = m.group(1);
-                        this.main.addNewTab(new Channel(channelName, this));
+                        main.registerNewChannel(new Channel(channelName, this));
                         System.out.println("new tab! " + channelName);
                     }
                 }
-                System.out.println(line);
-                this.main.addText(line);
+                String[] parts = line.split(" ");
+                String prefix = parts[0].substring(0, parts[0].length() - 1);
+                main.getChannel(prefix).addText(line);
             }
         }
         catch(Exception e) {
-            this.main.addText(e.toString());
+            main.getChannel("Server").addText(e.toString());
         }
         finally {
             try {
@@ -72,9 +73,9 @@ public class Client extends Thread {
                     socket.close();
             }
             catch (IOException e) {
-                this.main.addText(e.toString());
+                main.getChannel("Server").addText(e.toString());
             }
-            this.main.markDisconnected();
+            main.markDisconnected();
         }
     }
 
